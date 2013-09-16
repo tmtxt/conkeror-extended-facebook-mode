@@ -1,3 +1,28 @@
+/* conkeror-extended-facebook-mode
+   Conkeror Extended Facebook Mode
+
+   Version: 0.1
+   
+Copyright (C) 2013 Trần Xuân Trường <me@truongtx.me>
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+*/
+
+
+// This mode is based on the Conkeror's built-in Facebook mode
 // include the default facebook mode
 require("facebook");
 
@@ -13,15 +38,21 @@ define_key(facebook_keymap, "c", null, $fallthrough);
 
 // function for inspecting and finding the link of selected story
 function facebook_mode_find_story_link(I, open_url_func){
+  // get the document
   var doc = I.buffer.document;
+  // query the selected story
   var selectedStory = doc.querySelector(".selectedStorySimple");
+  // check if the selected story is null
   if(selectedStory == null){
 	I.minibuffer.message("No selected story");
   } else {
+	// get the timestamp tag inside the <a> tag
 	var timestamp = selectedStory.querySelector(".timestamp");
+	// check if it's null
 	if(timestamp == null){
 	  I.minibuffer.message("Cannot find timestamp link");
 	} else {
+	  // get the parent node <a> and open the url
 	  var link = timestamp.parentNode;
 	  open_url_func(link, i.window);
 	}
