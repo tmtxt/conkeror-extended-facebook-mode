@@ -57,6 +57,16 @@ interactive("facebook-open-friend-request", "Open Facebook Friend Requests panel
 		   });
 define_key(facebook_keymap, "3", "facebook-open-friend-request");
 
+// open friend request panel
+interactive("facebook-open-messages", "Open Facebook Messages panel",
+		   function(I){
+			 var doc = I.buffer.document;
+			 var messageButton = doc.
+			   querySelector("#fbMessagesJewel>a.jewelButton");
+			 dom_node_click(messageButton);
+		   });
+define_key(facebook_keymap, "4", "facebook-open-messages");
+
 // function for inspecting and finding the link of selected story
 function facebook_mode_find_story_link(I, open_url_func){
   // get the document
