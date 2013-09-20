@@ -36,6 +36,15 @@ define_key(facebook_keymap, "l", null, $fallthrough);
 define_key(facebook_keymap, "m", null, $fallthrough);
 define_key(facebook_keymap, "c", null, $fallthrough);
 
+// other keys that even fall through cannot take effect
+interactive("facebook-open-notification", "Open Facebook Notification panel",
+		   function(I){
+			 var notificationButton = I.buffer.document.
+			   querySelector("#fbNotificationsJewel>a.jewelButton");
+			 dom_node_click(notificationButton);
+		   });
+define_key(facebook_keymap, "5", "facebook-open-notification");
+
 // function for inspecting and finding the link of selected story
 function facebook_mode_find_story_link(I, open_url_func){
   // get the document
