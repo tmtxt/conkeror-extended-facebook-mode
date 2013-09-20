@@ -40,14 +40,17 @@ define_key(facebook_keymap, "c", null, $fallthrough);
 function facebook_mode_find_story_link(I, open_url_func){
   // get the document
   var doc = I.buffer.document;
-  // query the selected story
-  var selectedStory = doc.querySelector(".selectedStorySimple");
-  // check if the selected story is null
-  if(selectedStory == null){
-	I.minibuffer.message("No selected story");
-  } else {
+  
+  // query the selected story and check if it's exist
+  // selected story is an element with class selectedStorySimple (old news feed)
+  // or _5gxh (new style news feed)
+  var selectedStory;
+  if((selectedStory = doc.querySelector(".selectedStorySimple")) != null
+	| (selectedStory = doc.querySelector("._5gxh")) != null){
+	
 	// get the timestamp tag inside the <a> tag
 	var timestamp = selectedStory.querySelector(".timestamp");
+	
 	// check if it's null
 	if(timestamp == null){
 	  I.minibuffer.message("Cannot find timestamp link");
@@ -56,7 +59,10 @@ function facebook_mode_find_story_link(I, open_url_func){
 	  var link = timestamp.parentNode;
 	  open_url_func(link, i.window);
 	}
+  } else {
+	I.minibuffer.message("No selected story");
   }
+
 }
 
 // interactive command to open selected story
