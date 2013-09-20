@@ -1,7 +1,7 @@
 /* conkeror-extended-facebook-mode
    Conkeror Extended Facebook Mode
 
-   Version: 0.1
+   Version: 1.0.0
    
 Copyright (C) 2013 Trần Xuân Trường <me@truongtx.me>
 
