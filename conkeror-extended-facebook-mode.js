@@ -21,12 +21,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 */
 
+// :TODO
+// cycle through conversations (selector _552m)
 
 // This mode is based on the Conkeror's built-in Facebook mode
 // include the default facebook mode
 require("facebook");
 
-// facebook shortcut keys
+////////////////////////////////////////////////////////////////////////////////
+// Fallthrough keys for Facebook shortcut keys
 define_key(facebook_keymap, "j", null, $fallthrough);
 define_key(facebook_keymap, "k", null, $fallthrough);
 define_key(facebook_keymap, "return", null, $fallthrough);
@@ -36,17 +39,8 @@ define_key(facebook_keymap, "l", null, $fallthrough);
 define_key(facebook_keymap, "m", null, $fallthrough);
 // define_key(facebook_keymap, "c", null, $fallthrough);
 
-// other keys that even fall through cannot take effect
-// open notification panel
-interactive("facebook-open-notification", "Open Facebook Notification panel",
-		   function(I){
-			 var doc = I.buffer.document;
-			 var notificationButton = doc.
-			   querySelector("#fbNotificationsJewel>a.jewelButton");
-			 dom_node_click(notificationButton);
-		   });
-define_key(facebook_keymap, "5", "facebook-open-notification");
-
+////////////////////////////////////////////////////////////////////////////////
+// Functions for performing other keys that fallthrough cannot take effect
 // open friend request panel
 interactive("facebook-open-friend-request", "Open Facebook Friend Requests panel",
 		   function(I){
@@ -67,6 +61,18 @@ interactive("facebook-open-messages", "Open Facebook Messages panel",
 		   });
 define_key(facebook_keymap, "4", "facebook-open-messages");
 
+// open notification panel
+interactive("facebook-open-notification", "Open Facebook Notification panel",
+		   function(I){
+			 var doc = I.buffer.document;
+			 var notificationButton = doc.
+			   querySelector("#fbNotificationsJewel>a.jewelButton");
+			 dom_node_click(notificationButton);
+		   });
+define_key(facebook_keymap, "5", "facebook-open-notification");
+
+////////////////////////////////////////////////////////////////////////////////
+// Open the selected story when browsing with j and k
 // function for inspecting and finding the link of selected story
 function facebook_mode_find_story_link(I, open_url_func){
   // get the document
