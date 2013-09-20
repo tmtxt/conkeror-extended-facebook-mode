@@ -46,7 +46,7 @@ function facebook_mode_find_story_link(I, open_url_func){
   // or _5gxh (new style news feed)
   var selectedStory;
   if((selectedStory = doc.querySelector(".selectedStorySimple")) != null
-	| (selectedStory = doc.querySelector("._5gxh")) != null){
+	|| (selectedStory = doc.querySelector("._5gxh")) != null){
 	
 	// get the timestamp tag inside the <a> tag
 	var timestamp = selectedStory.querySelector(".timestamp");
