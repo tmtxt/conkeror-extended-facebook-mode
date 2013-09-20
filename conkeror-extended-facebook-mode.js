@@ -34,16 +34,28 @@ define_key(facebook_keymap, "q", null, $fallthrough);
 define_key(facebook_keymap, "/", null, $fallthrough);
 define_key(facebook_keymap, "l", null, $fallthrough);
 define_key(facebook_keymap, "m", null, $fallthrough);
-define_key(facebook_keymap, "c", null, $fallthrough);
+// define_key(facebook_keymap, "c", null, $fallthrough);
 
 // other keys that even fall through cannot take effect
+// open notification panel
 interactive("facebook-open-notification", "Open Facebook Notification panel",
 		   function(I){
-			 var notificationButton = I.buffer.document.
+			 var doc = I.buffer.document;
+			 var notificationButton = doc.
 			   querySelector("#fbNotificationsJewel>a.jewelButton");
 			 dom_node_click(notificationButton);
 		   });
 define_key(facebook_keymap, "5", "facebook-open-notification");
+
+// open friend request panel
+interactive("facebook-open-friend-request", "Open Facebook Friend Requests panel",
+		   function(I){
+			 var doc = I.buffer.document;
+			 var requestButton = doc.
+			   querySelector("#fbRequestsJewel>a.jewelButton");
+			 dom_node_click(requestButton);
+		   });
+define_key(facebook_keymap, "3", "facebook-open-friend-request");
 
 // function for inspecting and finding the link of selected story
 function facebook_mode_find_story_link(I, open_url_func){
