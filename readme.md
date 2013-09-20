@@ -1,6 +1,6 @@
 **Conkeror Extended Facebook Mode** is an extension for Conkeror's Facebook mode
 to help browse Facebook faster. It
-extends the build-in Facebook mode to provide more commands to interactive with
+extends the built-in Facebook mode to provide more commands to interactive with
 Facebook News Feed, Story, Comment, Like,...
 
 You can find the information as well as the instruction on how to install and
