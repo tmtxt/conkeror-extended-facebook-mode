@@ -72,6 +72,137 @@ interactive("facebook-open-notification", "Open Facebook Notification panel",
 define_key(facebook_keymap, "5", "facebook-open-notification");
 
 ////////////////////////////////////////////////////////////////////////////////
+// Cycle through conversations
+// function facebook_mode_cycle_through_conversations(I){
+//   // get the document
+//   var doc = I.buffer.document;
+
+//   // query all the currently active conversations
+//   // the conversations's textboxes for typing chat message are <textarea> with
+//   // class _552m
+//   var conversationTextareas = doc.querySelectorAll("._552m");
+
+//   // check if the array is null
+//   if(conversationTextareas.length == 0){
+// 	I.minibuffer.message("No active conversations. Press q to find a friend to chat");
+//   } else {
+
+// 	// variable for checking
+// 	var isFocusOnConversations = false;
+// 	var t="";
+	
+// 	// loop through the array
+// 	for(var i=0; i<conversationTextareas.length; i++){
+
+	  
+	  
+// 	  // check if the current conversation is current being focused
+// 	  if(doc.activeElement === conversationTextareas[i]){
+
+// 		t+=i;
+// 		I.minibuffer.message(t);
+		
+// 		// then move the focus to the next conversation or back to the first one
+// 		// check if this is the last conversation
+// 		if(i == conversationTextareas.length-1){
+// 		  // move focus the first
+// 		  conversationTextareas[0].focus();
+// 		} else {
+// 		  // move focus to the next
+// 		  conversationTextareas[i+1].focus();
+// 		}
+
+// 		// then set the isFocusOnConversations to true
+// 		isFocusOnConversations = true;
+// 	  }
+// 	}
+
+// 	// check if the isFocusOnConversations is false, then focus on the first one
+// 	if(!isFocusOnConversations){
+// 	  conversationTextareas[0].focus();
+// 	}
+
+// 	// check if the focus is on the conversation
+// 	// if(doc.activeElement.classList.contains("_552m")){
+// 	//   // focus on the first conversation
+// 	// } else {
+// 	//   // check if 
+// 	// }
+//   }
+// }
+
+function facebook_mode_cycle_through_conversations(I){
+  // get the document object
+  var document = I.buffer.document;
+
+  // query the div(s) that contain the chat conversations and the textareas for
+  // typing chat message
+  var conversationDiv = document.querySelectorAll("._50-v.fbNub._50mz._50m_");
+  var conversationTextareas = document.querySelectorAll("._552m");
+
+  // check if there are any active conversations
+  if(conversationDiv.length == 0){
+  	I.minibuffer.message("No active conversations. Press q to find a friend to chat");
+  } else {
+
+  	// if the focus is not on any conversation, focus on the first conversation,
+  	// otherwise focus on the next conversation
+	var activeElement = document.activeElement;
+  	if(activeElement.classList.contains("_552m")){
+
+	  // focus on the next
+
+	  // find the parent div
+	  var p = activeElement.parentNode;
+	  while(p!=document){
+		if(p.classList.contains("_50-v")
+		  && p.classList.contains("fbNub")
+		  && p.classList.contains("_50mz")){
+		  break;
+		} else {
+		  p = p.parentNode;
+		}
+	  }
+
+	  if(p == document){
+		// cannot find
+		I.minibuffer.message("not found");
+	  } else {
+
+		// loop through the conversationDiv to find the match div tag
+		for(var i=0; i<conversationDiv.length; i++){
+		  if(p.isEqualNode(conversationDiv[i])){
+			// focus on the next, if it's the end of array, focus on the first
+			if(i == conversationDiv.length - 1){
+			  // end of array, focus on the first
+			  conversationTextareas[0].focus();
+			} else {
+			  // focus on the next
+			  conversationTextareas[i+1].focus();
+			}
+		  }
+		}
+		
+	  }
+	  
+	  
+  	} else {
+  	  // focus on the first
+  	  conversationTextareas[0].focus();
+  	}
+	
+	
+  }
+}
+
+// interactive commands for cycling through conversations
+interactive("facebook-cycle-conversations", null, function(I){
+  facebook_mode_cycle_through_conversations(I);
+});
+
+define_key(facebook_keymap, "C-C", "facebook-cycle-conversations");
+
+////////////////////////////////////////////////////////////////////////////////
 // Open the selected story when browsing with j and k
 // function for inspecting and finding the link of selected story
 function facebook_mode_find_story_link(I, open_url_func){
