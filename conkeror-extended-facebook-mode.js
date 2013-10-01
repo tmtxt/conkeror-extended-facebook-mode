@@ -20,7 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 // :TODO
-// cycle through conversations (selector _552m)
+// scroll chat conversations
+// use this document.querySelector("._50-v.fbNub._50mz._50m_").querySelector(".fbNubFlyoutBody").scrollTop
 
 // This mode is based on the Conkeror's built-in Facebook mode
 // include the default facebook mode
@@ -130,6 +131,59 @@ function facebook_mode_cycle_through_conversations(I){
 interactive("facebook-cycle-conversations", null, function(I){
   facebook_mode_cycle_through_conversations(I);
 });
+
+// scroll chat conversation
+function facebook_mode_scroll_current_conversation_up(I){
+  // get the document buffer
+  var document = I.buffer.document;
+
+  // query the div(s) that contain the chat conversations and the textareas for
+  // typing chat message
+  var conversationDiv = document.querySelectorAll("._50-v.fbNub._50mz._50m_");
+  var conversationTextareas = document.querySelectorAll("._552m");
+
+  // check if there are any active conversations
+  if(conversationDiv.length == 0){
+  	I.minibuffer.message("No active conversations. Press q to find a friend to chat");
+  } else {
+	// check if there is any active conversation
+	var activeElement = document.activeElement;
+  	if(activeElement.classList.contains("_552m")){
+
+	  // find the conversation div that is nth-levels parent of the active element
+	  var p = activeElement.parentNode;
+	  while(p!=document){
+		if(p.classList.contains("_50-v")
+		  && p.classList.contains("fbNub")
+		  && p.classList.contains("_50mz")){
+		  break;
+		} else {
+		  p = p.parentNode;
+		}
+	  }
+
+	  // check if it can find
+	  if(p == document){
+		// cannot find
+		I.minibuffer.message("Cannot find the conversation.");
+	  } else {
+
+		p.querySelector(".fbNubFlyoutBody").scrollTop = 0;
+		
+	  }
+	  
+	} else {
+	  I.minibuffer.message("No focused conversation. Focus on one conversation first");
+	}
+  }
+  
+}
+
+// interactive commands for scrolling up current conversation
+interactive("facebook-scroll-up-current-coversation", null, function(I){
+  facebook_mode_scroll_current_conversation_up(I);
+});
+define_key(facebook_keymap, "C-I", "facebook-scroll-up-current-coversation");
 
 ////////////////////////////////////////////////////////////////////////////////
 // Open the selected story when browsing with j and k
