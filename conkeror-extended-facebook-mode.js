@@ -73,6 +73,8 @@ interactive("facebook-open-notification", "Open Facebook Notification panel",
 define_key(facebook_keymap, "5", "facebook-open-notification");
 
 ////////////////////////////////////////////////////////////////////////////////
+// Facebook chat interation
+
 // function for checking if the focus is on any conversations or not
 function facebook_mode_is_focus_on_conversation(document){
   var activeElement = document.activeElement;
