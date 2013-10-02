@@ -20,8 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 // :TODO
-// scroll chat conversations
-// use this document.querySelector("._50-v.fbNub._50mz._50m_").querySelector(".fbNubFlyoutBody").scrollTop
+// scroll chat conversations (up/down)
+// use this
+// document.querySelector("._50-v.fbNub._50mz._50m_").querySelector(".fbNubFlyoutBody").scrollTop
+// organize code, separate to function for reusablility
 
 // This mode is based on the Conkeror's built-in Facebook mode
 // include the default facebook mode
@@ -71,6 +73,52 @@ interactive("facebook-open-notification", "Open Facebook Notification panel",
 define_key(facebook_keymap, "5", "facebook-open-notification");
 
 ////////////////////////////////////////////////////////////////////////////////
+// function for checking if there is any active conversations
+function facebook_mode_active_conversations_exist(conversationDiv){
+  if(conversationDiv.length == 0){
+	return false;
+  } else {
+	return true;
+  }
+}
+
+// function for checking if the focus is on any conversations or not
+function facebook_mode_is_focus_on_conversation(document){
+  var activeElement = document.activeElement;
+  if(activeElement.classList.contains("_552m")){
+	return true;
+  } else {
+	return false;
+  }
+}
+
+// function for finding the conversation div that is nth-level parent of the
+// active element
+// returns the conversation div object if it is found, otherwise, returns null
+function facebook_mode_find_conversation_div(document){
+  var activeElement = document.activeElement;
+
+  // find the conversation div that is nth-level parent of the active element
+  var p = activeElement.parentNode;
+  
+  while(p!=document){
+	if(p.classList.contains("_50-v")
+	   && p.classList.contains("fbNub")
+	   && p.classList.contains("_50mz")){
+	  break;
+	} else {
+	  p = p.parentNode;
+	}
+  }
+
+  // check if it can find
+  if(p == document){
+	return null;
+  } else {
+	return p;
+  }
+}
+
 // Cycle through conversations
 function facebook_mode_cycle_through_conversations(I){
   // get the document object
@@ -82,28 +130,13 @@ function facebook_mode_cycle_through_conversations(I){
   var conversationTextareas = document.querySelectorAll("._552m");
 
   // check if there are any active conversations
-  if(conversationDiv.length == 0){
-  	I.minibuffer.message("No active conversations. Press q to find a friend to chat");
-  } else {
-  	// if the focus is not on any conversation, focus on the first conversation,
-  	// otherwise focus on the next conversation
-	var activeElement = document.activeElement;
-  	if(activeElement.classList.contains("_552m")){
-	  // find the conversation div that is nth-levels parent of the active element
-	  var p = activeElement.parentNode;
-	  while(p!=document){
-		if(p.classList.contains("_50-v")
-		  && p.classList.contains("fbNub")
-		  && p.classList.contains("_50mz")){
-		  break;
-		} else {
-		  p = p.parentNode;
-		}
-	  }
-
-	  // check if it can find
-	  if(p == document){
-		// cannot find
+  if(facebook_mode_active_conversations_exist(conversationDiv)){
+	// check if the focus is on any conversation or not
+	if(facebook_mode_is_focus_on_conversation(document)){
+	  // find the conversation div that is nth-level parent of the active
+	  // element
+	  var p;
+	  if((p = facebook_mode_find_conversation_div(document)) == null){
 		I.minibuffer.message("Cannot find the conversation.");
 	  } else {
 		// loop through the conversationDiv to find the match div tag
@@ -120,11 +153,14 @@ function facebook_mode_cycle_through_conversations(I){
 		  }
 		}
 	  }
-  	} else {
-  	  // focus on the first
+	} else {
+	  // focus on the first
   	  conversationTextareas[0].focus();
-  	}
+	}
+  } else {
+	I.minibuffer.message("No active conversations. Press q to find a friend to chat");
   }
+  
 }
 
 // interactive commands for cycling through conversations
