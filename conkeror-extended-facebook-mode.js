@@ -180,8 +180,10 @@ interactive("facebook-cycle-conversations", null, function(I){
   facebook_mode_cycle_through_conversations(I);
 });
 
-// scroll current chat conversation up
-function facebook_mode_scroll_current_conversation_up(I){
+// scroll current chat conversation
+var facebook_mode_scroll_gap = 50;
+
+function facebook_mode_scroll_current_conversation(I, scroll_gap){
   // get the document buffer
   var document = I.buffer.document;
 
@@ -200,8 +202,10 @@ function facebook_mode_scroll_current_conversation_up(I){
 	  if((p = facebook_mode_find_conversation_div(document)) == null){
 		I.minibuffer.message(facebook_mode_conversation_not_found);
 	  } else {
+		// query the body of the chat (the scrollable part)
+		var chat_body = p.querySelector(".fbNubFlyoutBody");
 		// scroll to top
-		p.querySelector(".fbNubFlyoutBody").scrollTop = 0;
+		chat_body.scrollTop = chat_body.scrollTop + scroll_gap;
 	  }
 	} else {
 	  I.minibuffer.message(facebook_mode_no_focused_conversation);
@@ -211,11 +215,23 @@ function facebook_mode_scroll_current_conversation_up(I){
   }  
 }
 
+function facebook_mode_scroll_current_conversation_up(I){
+  facebook_mode_scroll_current_conversation(I, 0 - facebook_mode_scroll_gap);
+}
+
+function facebook_mode_scroll_current_conversation_down(I){
+  facebook_mode_scroll_current_conversation(I, facebook_mode_scroll_gap);
+}
+
 // interactive commands for scrolling up current conversation
 interactive("facebook-scroll-up-current-coversation", null, function(I){
   facebook_mode_scroll_current_conversation_up(I);
 });
-define_key(facebook_keymap, "C-I", "facebook-scroll-up-current-coversation");
+
+// interactive commands for scrolling down current conversation
+interactive("facebook-scroll-down-current-coversation", null, function(I){
+  facebook_mode_scroll_current_conversation_down(I);
+});
 
 ////////////////////////////////////////////////////////////////////////////////
 // Open the selected story when browsing with j and k
