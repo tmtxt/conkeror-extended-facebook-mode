@@ -73,15 +73,6 @@ interactive("facebook-open-notification", "Open Facebook Notification panel",
 define_key(facebook_keymap, "5", "facebook-open-notification");
 
 ////////////////////////////////////////////////////////////////////////////////
-// function for checking if there is any active conversations
-function facebook_mode_active_conversations_exist(conversationDiv){
-  if(conversationDiv.length == 0){
-	return false;
-  } else {
-	return true;
-  }
-}
-
 // function for checking if the focus is on any conversations or not
 function facebook_mode_is_focus_on_conversation(document){
   var activeElement = document.activeElement;
@@ -119,21 +110,27 @@ function facebook_mode_find_conversation_div(document){
   }
 }
 
-// function for error printing
-function facebook_mode_print_not_find_conversation(I){
-  I.minibuffer.message("Cannot find the conversation.");
-}
-function facebook_mode_print_no_active_conversation(I){
-  I.minibuffer.message("No active conversations. Press q to find a friend to chat");
-}
-
 // function for querying the conversationDiv and conversationTextareas array
 function facebook_mode_find_conversation_div_array(document){
-  return document.querySelectorAll("._50-v.fbNub._50mz._50m_");
+  var conversationDiv = document.querySelectorAll("._50-v.fbNub._50mz._50m_");
+
+  if(conversationDiv.length == 0){
+	return null;
+  } else {
+	return conversationDiv;
+  }
 }
 function facebook_mode_find_conversation_textarea_array(document){
   return document.querySelectorAll("._552m");
 }
+
+// error strings
+var facebook_mode_conversation_not_found
+= "Cannot find conversation div";
+var facebook_mode_no_active_conversation
+= "No active conversations. Press q to find a friend to chat.";
+var facebook_mode_no_focused_conversation
+= "No focused conversation. Focus on one conversation first";
 
 // Cycle through conversations
 function facebook_mode_cycle_through_conversations(I){
@@ -142,18 +139,18 @@ function facebook_mode_cycle_through_conversations(I){
 
   // query the div(s) that contain the chat conversations and the textareas for
   // typing chat message
-  var conversationDiv = facebook_mode_find_conversation_div_array(document);
+  var conversationDiv;
   var conversationTextareas = facebook_mode_find_conversation_textarea_array(document);
 
   // check if there are any active conversations
-  if(facebook_mode_active_conversations_exist(conversationDiv)){
+  if((conversationDiv = facebook_mode_find_conversation_div_array(document)) != null){
 	// check if the focus is on any conversation or not
 	if(facebook_mode_is_focus_on_conversation(document)){
 	  // find the conversation div that is nth-level parent of the active
 	  // element
 	  var p;
 	  if((p = facebook_mode_find_conversation_div(document)) == null){
-		facebook_mode_print_not_find_conversation(I);
+		I.minibuffer.message(facebook_mode_conversation_not_found);
 	  } else {
 		// loop through the conversationDiv to find the match div tag
 		for(var i=0; i<conversationDiv.length; i++){
@@ -174,9 +171,8 @@ function facebook_mode_cycle_through_conversations(I){
   	  conversationTextareas[0].focus();
 	}
   } else {
-	facebook_mode_print_no_active_conversation(I);
+	I.minibuffer.message(facebook_mode_no_active_conversation);
   }
-  
 }
 
 // interactive commands for cycling through conversations
@@ -191,44 +187,28 @@ function facebook_mode_scroll_current_conversation_up(I){
 
   // query the div(s) that contain the chat conversations and the textareas for
   // typing chat message
-  var conversationDiv = document.querySelectorAll("._50-v.fbNub._50mz._50m_");
-  var conversationTextareas = document.querySelectorAll("._552m");
+  var conversationDiv;
+  var conversationTextareas = facebook_mode_find_conversation_textarea_array(document);
 
   // check if there are any active conversations
-  if(conversationDiv.length == 0){
-  	I.minibuffer.message("No active conversations. Press q to find a friend to chat");
-  } else {
-	// check if there is any active conversation
-	var activeElement = document.activeElement;
-  	if(activeElement.classList.contains("_552m")){
-
-	  // find the conversation div that is nth-levels parent of the active element
-	  var p = activeElement.parentNode;
-	  while(p!=document){
-		if(p.classList.contains("_50-v")
-		  && p.classList.contains("fbNub")
-		  && p.classList.contains("_50mz")){
-		  break;
-		} else {
-		  p = p.parentNode;
-		}
-	  }
-
-	  // check if it can find
-	  if(p == document){
-		// cannot find
-		I.minibuffer.message("Cannot find the conversation.");
+  if((conversationDiv = facebook_mode_find_conversation_div_array(document)) != null){
+	// check if the focus is on any conversation or not
+	if(facebook_mode_is_focus_on_conversation(document)){
+	  // find the conversation div that is nth-level parent of the active
+	  // element
+	  var p;
+	  if((p = facebook_mode_find_conversation_div(document)) == null){
+		I.minibuffer.message(facebook_mode_conversation_not_found);
 	  } else {
-
+		// scroll to top
 		p.querySelector(".fbNubFlyoutBody").scrollTop = 0;
-		
 	  }
-	  
 	} else {
-	  I.minibuffer.message("No focused conversation. Focus on one conversation first");
+	  I.minibuffer.message(facebook_mode_no_focused_conversation);
 	}
-  }
-  
+  } else {
+	I.minibuffer.message(facebook_mode_no_active_conversation);
+  }  
 }
 
 // interactive commands for scrolling up current conversation
