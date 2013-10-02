@@ -119,6 +119,22 @@ function facebook_mode_find_conversation_div(document){
   }
 }
 
+// function for error printing
+function facebook_mode_print_not_find_conversation(I){
+  I.minibuffer.message("Cannot find the conversation.");
+}
+function facebook_mode_print_no_active_conversation(I){
+  I.minibuffer.message("No active conversations. Press q to find a friend to chat");
+}
+
+// function for querying the conversationDiv and conversationTextareas array
+function facebook_mode_find_conversation_div_array(document){
+  return document.querySelectorAll("._50-v.fbNub._50mz._50m_");
+}
+function facebook_mode_find_conversation_textarea_array(document){
+  return document.querySelectorAll("._552m");
+}
+
 // Cycle through conversations
 function facebook_mode_cycle_through_conversations(I){
   // get the document object
@@ -126,8 +142,8 @@ function facebook_mode_cycle_through_conversations(I){
 
   // query the div(s) that contain the chat conversations and the textareas for
   // typing chat message
-  var conversationDiv = document.querySelectorAll("._50-v.fbNub._50mz._50m_");
-  var conversationTextareas = document.querySelectorAll("._552m");
+  var conversationDiv = facebook_mode_find_conversation_div_array(document);
+  var conversationTextareas = facebook_mode_find_conversation_textarea_array(document);
 
   // check if there are any active conversations
   if(facebook_mode_active_conversations_exist(conversationDiv)){
@@ -137,7 +153,7 @@ function facebook_mode_cycle_through_conversations(I){
 	  // element
 	  var p;
 	  if((p = facebook_mode_find_conversation_div(document)) == null){
-		I.minibuffer.message("Cannot find the conversation.");
+		facebook_mode_print_not_find_conversation(I);
 	  } else {
 		// loop through the conversationDiv to find the match div tag
 		for(var i=0; i<conversationDiv.length; i++){
@@ -158,7 +174,7 @@ function facebook_mode_cycle_through_conversations(I){
   	  conversationTextareas[0].focus();
 	}
   } else {
-	I.minibuffer.message("No active conversations. Press q to find a friend to chat");
+	facebook_mode_print_no_active_conversation(I);
   }
   
 }
@@ -168,7 +184,7 @@ interactive("facebook-cycle-conversations", null, function(I){
   facebook_mode_cycle_through_conversations(I);
 });
 
-// scroll chat conversation
+// scroll current chat conversation up
 function facebook_mode_scroll_current_conversation_up(I){
   // get the document buffer
   var document = I.buffer.document;
