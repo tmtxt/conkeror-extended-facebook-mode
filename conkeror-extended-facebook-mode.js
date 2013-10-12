@@ -19,13 +19,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 */
 
-// :TODO
-// scroll chat conversations (up/down)
-// use this
-// document.querySelector("._50-v.fbNub._50mz._50m_").querySelector(".fbNubFlyoutBody").scrollTop
-// organize code, separate to function for reusablility
+// TODO
+// function for extend the story content (see more...)
 
 // This mode is based on the Conkeror's built-in Facebook mode
+
 // include the default facebook mode
 require("facebook");
 
