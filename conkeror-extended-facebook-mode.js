@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 ////////////////////////////////////////////////////////////////////////////////O
-// TODO
+// 
 // function for extend the story content (see more...)
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -248,33 +248,76 @@ function cefm_find_selected_story(document){
  */
 function cefm_find_story_link(I, open_url_func){
   // get the document
-  var doc = I.buffer.document;
-  
-  // query the selected story and check if it's exist
-  // selected story is an element with class selectedStorySimple (old news feed)
-  // or _5gxh (new style news feed)
-  var selectedStory;
-  if((selectedStory = cefm_find_selected_story(doc)) != null){
+  var document = I.buffer.document;
+  var story_link_array = new Array();
+  var selected_story = cefm_find_selected_story(document);
 
-	// find the <a> tag that contains the story link
-	var storyLink;
-	if((storyLink = selectedStory.querySelector("a._5pcq")) != null
-	  || ((storyLink = selectedStory.querySelector(".fcg>a")) != null && storyLink.getAttribute("href") != "#")){
-	  open_url_func(storyLink, i.window);
-	} else {
-	  // for some special stories, the story link is hidden inside an <a> tag
-	  // within a <span> with class fwb. there are 2 span inside selectedStory
-	  // with class fwb, the one that contains the story link is the second one.
-	  var fwbElements = selectedStory.querySelectorAll(".fwb>a");
-	  if(fwbElements.length != 0){
-		storyLink = fwbElements[1];
-		open_url_func(storyLink, i.window);
-	  } else {
-		I.minibuffer.message("Cannot find timestamp link");
-	  }
-	}
+  // check if the selected story exists
+
+  if(selected_story != null){
+  	// query all the possible potential links inside the selectedStory
+  	var temp;
+  	var tempArray;
+  	temp = selected_story.querySelector("a._5pcq");
+  	story_link_array.push(temp);
+	temp = selected_story.querySelector(".uiStreamSource>a");
+	story_link_array.push(temp);
+  	tempArray = selected_story.querySelectorAll(".fcg>a");
+  	for(i=0; i<tempArray.length; i++){
+  	  story_link_array.push(tempArray[i]);
+  	}
+  	tempArray = selected_story.querySelectorAll(".fwb");
+  	for(i=0; i<tempArray.length; i++){
+  	  var tempArray2 = tempArray[i].querySelectorAll("a");
+  	  for(i=0; i<tempArray2.length; i++){
+  		story_link_array.push(tempArray2[i]);
+  	  }
+  	}
+
+  	// the regex array
+  	var regex_array = new Array();
+  	var regex;
+  	// https://www.facebook.com/photo.php?fbid=681522898533972&set=a.451364638216467.109262.100000288032725&type=1
+  	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com)/(photo.php)[A-Za-z0-9?=.&/]+$");
+  	regex_array.push(regex);
+  	// https://www.facebook.com/cellphones.befirst.always/posts/698666850151154
+  	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com)/[A-Za-z0-9.]+/(posts)/[A-Za-z0-9:./]+$");
+  	regex_array.push(regex);
+  	// https://www.facebook.com/groups/377906112324180/permalink/482710721843718/
+  	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com)/(groups)/[A-Za-z0-9.]+/(permalink)/[A-Za-z0-9./]+$");
+  	regex_array.push(regex);
+  	// https://www.facebook.com/media/set/?set=a.714473798592597.1073741843.100000899501161&type=1
+  	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com)/(media)/(set)/[A-Za-z0-9?.=/&]+$");
+  	regex_array.push(regex);
+  	// https://www.facebook.com/permalink.php?story_fbid=afjslkjks
+  	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com)/(permalink.php)[A-Za-z0-9_?=/&]+$");
+  	regex_array.push(regex);
+	// https://www.facebook.com/emilyosment10392/activity/3489815221361
+	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com)/[A-Za-z0-9.]+/(activity)/[A-Za-z0-9:./]+$");
+	regex_array.push(regex);
+
+  	// loop the story_link_array
+  	var match = false;
+  	for(i=0; i<story_link_array.length; i++){
+  	  // check if the current link match the regex
+  	  match = false;
+  	  for(j=0; j<regex_array.length; j++){
+  	  	if(regex_array[j].test(story_link_array[i])){
+  	  	  match = true;
+  	  	  break;
+  	  	}
+  	  }
+  	  if(match){
+  	  	open_url_func(story_link_array[i], I.window);
+  	  	break;
+  	  }
+  	}
+  	if(!match){
+  	  I.minibuffer.message("Cannot find story link");
+  	}
+	
   } else {
-	I.minibuffer.message("No selected story");
+  	I.minibuffer.message("No selected story");
   }
 }
 
