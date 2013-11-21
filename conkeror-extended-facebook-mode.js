@@ -37,6 +37,7 @@ define_key(facebook_keymap, "/", null, $fallthrough);
 define_key(facebook_keymap, "l", null, $fallthrough);
 define_key(facebook_keymap, "m", null, $fallthrough);
 define_key(facebook_keymap, "c", null, $fallthrough);
+define_key(facebook_keymap, "p", null, $fallthrough);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Variables used
