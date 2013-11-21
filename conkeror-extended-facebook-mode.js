@@ -69,6 +69,14 @@ interactive("facebook-open-notification", "Open Facebook Notification panel",
 			 dom_node_click(notificationButton);
 		   });
 define_key(facebook_keymap, "5", "facebook-open-notification");
+interactive("facebook-open-home", "Open Facebook Home page",
+		   function(I){
+			 var doc = I.buffer.document;
+			 var homeButton = doc.
+			   querySelector("#navHome>a");
+			 dom_node_click(homeButton);
+		   });
+define_key(facebook_keymap, "1", "facebook-open-home");
 
 ////////////////////////////////////////////////////////////////////////////////
 // Facebook chat interation
