@@ -19,11 +19,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 */
 
-// This mode is based on the Conkeror's built-in Facebook mode
-
+////////////////////////////////////////////////////////////////////////////////
 // TODO
 // function for extend the story content (see more...)
 
+////////////////////////////////////////////////////////////////////////////////
 // Include library
 require("facebook"); // the default Conkeror's Facebook mode
 
