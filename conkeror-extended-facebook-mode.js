@@ -245,19 +245,27 @@ function facebook_mode_find_story_link(I, open_url_func){
   // or _5gxh (new style news feed)
   var selectedStory;
   if((selectedStory = doc.querySelector(".selectedStorySimple")) != null
-	|| (selectedStory = doc.querySelector("._5gxh")) != null){
+	|| (selectedStory = doc.querySelector("._5gxh")) != null
+	|| (selectedStory = doc.querySelector("._5qdv")) != null){
 	
 	// get the timestamp tag inside the <a> tag
-	var timestamp = selectedStory.querySelector(".timestamp");
-	
-	// check if it's null
-	if(timestamp == null){
-	  I.minibuffer.message("Cannot find timestamp link");
+	var storyLink;
+	if((storyLink = selectedStory.querySelector("a._5pcq")) != null
+	  || (storyLink = selectedStory.querySelector("span.fcg>a")) != null){
+	  open_url_func(storyLink, i.window);
 	} else {
-	  // get the parent node <a> and open the url
-	  var link = timestamp.parentNode;
-	  open_url_func(link, i.window);
+	  I.minibuffer.message("Cannot find story link");
 	}
+	// var timestamp = selectedStory.querySelector(".timestamp");
+	
+	// // check if it's null
+	// if(timestamp == null){
+	//   I.minibuffer.message("Cannot find timestamp link");
+	// } else {
+	//   // get the parent node <a> and open the url
+	//   var link = timestamp.parentNode;
+	//   open_url_func(link, i.window);
+	// }
   } else {
 	I.minibuffer.message("No selected story");
   }
