@@ -39,12 +39,22 @@ define_key(facebook_keymap, "m", null, $fallthrough);
 define_key(facebook_keymap, "c", null, $fallthrough);
 
 ////////////////////////////////////////////////////////////////////////////////
-// Function for clicking on element on page based on its css selector
+// Variables used
+var facebook_mode_conversation_not_found
+= "Cannot find conversation div"; // error message
+var facebook_mode_no_active_conversation
+= "No active conversations. Press q to find a friend to chat."; // error message
+var facebook_mode_no_focused_conversation
+= "No focused conversation. Focus on one conversation first"; // error message
+var facebook_mode_scroll_gap = 50; // scroll gap
+
+////////////////////////////////////////////////////////////////////////////////
+// Some functions needed for the mode
 /**
  * Click on the button with the input css selector
- * @param the css selector of the button
- * @param the name of the button, can be any name that you like
- * @param the I object of the interactive command 
+ * @param selector - The css selector of the button
+ * @param button_name - The name of the button, can be any name that you like
+ * @param I - The I object of the interactive command
 */
 function cefm_click_button(selector, button_name, I){
   var document = I.buffer.document;
@@ -56,12 +66,10 @@ function cefm_click_button(selector, button_name, I){
   }
 }
 
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Facebook chat interaction
-
-// function for checking if the focus is on any conversations or not
+/**
+ * Check if the focus is on any conversations or not
+ * @param document - The document object of the current buffer (I.buffer.document)
+ */
 function facebook_mode_is_focus_on_conversation(document){
   var activeElement = document.activeElement;
   if(activeElement.classList.contains("_552m")){
@@ -71,15 +79,15 @@ function facebook_mode_is_focus_on_conversation(document){
   }
 }
 
-// function for finding the conversation div that is nth-level parent of the
-// active element
-// returns the conversation div object if it is found, otherwise, returns null
+/**
+ * Finding the conversation <div> that is nth-level parent of the active element
+ * @param document - The document object of the current buffer (I.buffer.document)
+ * @return Returns the conversation <div> object if it's found, otherwise, returns null
+ */
 function facebook_mode_find_conversation_div(document){
   var activeElement = document.activeElement;
-
   // find the conversation div that is nth-level parent of the active element
   var p = activeElement.parentNode;
-  
   while(p!=document){
 	if(p.classList.contains("_50-v")
 	   && p.classList.contains("fbNub")
@@ -89,7 +97,6 @@ function facebook_mode_find_conversation_div(document){
 	  p = p.parentNode;
 	}
   }
-
   // check if it can find
   if(p == document){
 	return null;
@@ -98,29 +105,32 @@ function facebook_mode_find_conversation_div(document){
   }
 }
 
-// function for querying the conversationDiv and conversationTextareas array
+/**
+ * Find the conversation <div> arrays (all the conversation <div> inside the page)
+ * @param document - The document object of the current buffer (I.buffer.document)
+ * @return Returns the conversation <div> array there are any conversation <div> exists, otherwise, returns null
+ */
 function facebook_mode_find_conversation_div_array(document){
   var conversationDiv = document.querySelectorAll("._50-v.fbNub._50mz._50m_");
-
   if(conversationDiv.length == 0){
 	return null;
   } else {
 	return conversationDiv;
   }
 }
+
+/**
+ * Find the <textarea> array that contains all the <textarea>s inside the conversation <div>
+ * @param document - The document object of the current buffer (I.buffer.document)
+ */
 function facebook_mode_find_conversation_textarea_array(document){
   return document.querySelectorAll("._552m");
 }
 
-// error strings
-var facebook_mode_conversation_not_found
-= "Cannot find conversation div";
-var facebook_mode_no_active_conversation
-= "No active conversations. Press q to find a friend to chat.";
-var facebook_mode_no_focused_conversation
-= "No focused conversation. Focus on one conversation first";
-
-// Cycle through conversations
+/**
+ * Cycle through conversations
+ * @param I - The I object of the interactive command
+ */
 function facebook_mode_cycle_through_conversations(I){
   // get the document object
   var document = I.buffer.document;
@@ -163,11 +173,11 @@ function facebook_mode_cycle_through_conversations(I){
   }
 }
 
-
-
-// scroll current chat conversation
-var facebook_mode_scroll_gap = 50;
-
+/**
+ * Scroll current chat conversation
+ * @param I - The I object of the interactive command
+ * @param scroll_gap - The gap to scroll (positive for down, negative for scroll up)
+ */
 function facebook_mode_scroll_current_conversation(I, scroll_gap){
   // get the document buffer
   var document = I.buffer.document;
@@ -200,19 +210,27 @@ function facebook_mode_scroll_current_conversation(I, scroll_gap){
   }  
 }
 
+/**
+ * Scroll current chat conversation up
+ * @param I - The I object of the interactive command
+ */
 function facebook_mode_scroll_current_conversation_up(I){
   facebook_mode_scroll_current_conversation(I, 0 - facebook_mode_scroll_gap);
 }
 
+/**
+ * Scroll current chat conversation down
+ * @param I - The I object of the interactive command
+ */
 function facebook_mode_scroll_current_conversation_down(I){
   facebook_mode_scroll_current_conversation(I, facebook_mode_scroll_gap);
 }
 
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Open the selected story when browsing with j and k
-// function for inspecting and finding the link of selected story
+/**
+ * Inspect and find the link of selected story
+ * @param I - The I object of the interactive command
+ * @param open_url_func - The function for opening the url
+ */
 function facebook_mode_find_story_link(I, open_url_func){
   // get the document
   var doc = I.buffer.document;
