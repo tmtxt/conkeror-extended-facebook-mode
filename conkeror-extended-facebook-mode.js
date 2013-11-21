@@ -36,19 +36,31 @@ define_key(facebook_keymap, "q", null, $fallthrough);
 define_key(facebook_keymap, "/", null, $fallthrough);
 define_key(facebook_keymap, "l", null, $fallthrough);
 define_key(facebook_keymap, "m", null, $fallthrough);
-// define_key(facebook_keymap, "c", null, $fallthrough);
+define_key(facebook_keymap, "c", null, $fallthrough);
+
+/**
+ * Click on the button with the input css selector
+ * @param the css selector of the button
+ * @param the name of the button, can be any name that you like
+ * @param the I object of the interactive command 
+*/
+function cefm_click_button(selector, button_name, I){
+  var document = I.buffer.document;
+  var button = document.querySelector(selector);
+  if (button != null) {
+	dom_node_click(button);
+  } else {
+	I.minibuffer.message("Cannot find " + button_name + " button");
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Functions for performing other keys that fallthrough cannot take effect
 // open friend request panel
 interactive("facebook-open-friend-request", "Open Facebook Friend Requests panel",
 		   function(I){
-			 var doc = I.buffer.document;
-			 var requestButton = doc.
-			   querySelector("#fbRequestsJewel>a.jewelButton");
-			 dom_node_click(requestButton);
+			 cefm_click_button("#fbRequestsJewel>a.jewelButton", "Friend Request", I);
 		   });
-define_key(facebook_keymap, "3", "facebook-open-friend-request");
 
 // open friend request panel
 interactive("facebook-open-messages", "Open Facebook Messages panel",
@@ -58,7 +70,6 @@ interactive("facebook-open-messages", "Open Facebook Messages panel",
 			   querySelector("#fbMessagesJewel>a.jewelButton");
 			 dom_node_click(messageButton);
 		   });
-define_key(facebook_keymap, "4", "facebook-open-messages");
 
 // open notification panel
 interactive("facebook-open-notification", "Open Facebook Notification panel",
@@ -68,7 +79,8 @@ interactive("facebook-open-notification", "Open Facebook Notification panel",
 			   querySelector("#fbNotificationsJewel>a.jewelButton");
 			 dom_node_click(notificationButton);
 		   });
-define_key(facebook_keymap, "5", "facebook-open-notification");
+
+// open home page
 interactive("facebook-open-home", "Open Facebook Home page",
 		   function(I){
 			 var doc = I.buffer.document;
@@ -76,10 +88,17 @@ interactive("facebook-open-home", "Open Facebook Home page",
 			   querySelector("#navHome>a");
 			 dom_node_click(homeButton);
 		   });
-define_key(facebook_keymap, "1", "facebook-open-home");
+
+// quick logout
+interactive("cefm-quick-logout", "Quickly logout from Facebook",
+		   function(I){
+			 var doc = I.buffer.document;
+			 var logoutButton = doc.querySelector("#logout_form>label>input");
+			 dom_node_click(logoutButton);
+		   });
 
 ////////////////////////////////////////////////////////////////////////////////
-// Facebook chat interation
+// Facebook chat interaction
 
 // function for checking if the focus is on any conversations or not
 function facebook_mode_is_focus_on_conversation(document){
