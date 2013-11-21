@@ -65,36 +65,25 @@ interactive("facebook-open-friend-request", "Open Facebook Friend Requests panel
 // open friend request panel
 interactive("facebook-open-messages", "Open Facebook Messages panel",
 		   function(I){
-			 var doc = I.buffer.document;
-			 var messageButton = doc.
-			   querySelector("#fbMessagesJewel>a.jewelButton");
-			 dom_node_click(messageButton);
+			 cefm_click_button("#fbMessagesJewel>a.jewelButton", "Messages", I);
 		   });
 
 // open notification panel
 interactive("facebook-open-notification", "Open Facebook Notification panel",
 		   function(I){
-			 var doc = I.buffer.document;
-			 var notificationButton = doc.
-			   querySelector("#fbNotificationsJewel>a.jewelButton");
-			 dom_node_click(notificationButton);
+			 cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
 		   });
 
 // open home page
 interactive("facebook-open-home", "Open Facebook Home page",
 		   function(I){
-			 var doc = I.buffer.document;
-			 var homeButton = doc.
-			   querySelector("#navHome>a");
-			 dom_node_click(homeButton);
+			 cefm_click_button("#navHome>a", "Home", I);
 		   });
 
 // quick logout
 interactive("cefm-quick-logout", "Quickly logout from Facebook",
 		   function(I){
-			 var doc = I.buffer.document;
-			 var logoutButton = doc.querySelector("#logout_form>label>input");
-			 dom_node_click(logoutButton);
+			 cefm_click_button("#logout_form>label>input", "Logout", I);
 		   });
 
 ////////////////////////////////////////////////////////////////////////////////
