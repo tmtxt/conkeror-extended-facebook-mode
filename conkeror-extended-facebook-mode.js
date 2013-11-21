@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 */
 
-////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////O
 // TODO
 // function for extend the story content (see more...)
 
@@ -227,6 +227,20 @@ function cefm_scroll_current_conversation_down(I){
 }
 
 /**
+ * Find the selected story
+ * @param document - The document object of the current buffer (I.buffer.document)
+ * @return Returns the selected story object if found, otherwise, returns null
+ */
+function cefm_find_selected_story(document){
+  var selectedStory = null;
+  if((selectedStory = document.querySelector(".selectedStorySimple")) != null
+	|| (selectedStory = document.querySelector("._5gxh")) != null
+	|| (selectedStory = document.querySelector("._5qdv")) != null){
+  }
+  return selectedStory;
+}
+   
+/**
  * Inspect and find the link of selected story
  * @param I - The I object of the interactive command
  * @param open_url_func - The function for opening the url
@@ -239,9 +253,7 @@ function cefm_find_story_link(I, open_url_func){
   // selected story is an element with class selectedStorySimple (old news feed)
   // or _5gxh (new style news feed)
   var selectedStory;
-  if((selectedStory = doc.querySelector(".selectedStorySimple")) != null
-	|| (selectedStory = doc.querySelector("._5gxh")) != null
-	|| (selectedStory = doc.querySelector("._5qdv")) != null){
+  if((selectedStory = cefm_find_selected_story(doc)) != null){
 
 	// find the <a> tag that contains the story link
 	var storyLink;
