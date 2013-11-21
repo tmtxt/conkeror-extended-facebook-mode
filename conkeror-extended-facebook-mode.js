@@ -247,25 +247,24 @@ function facebook_mode_find_story_link(I, open_url_func){
   if((selectedStory = doc.querySelector(".selectedStorySimple")) != null
 	|| (selectedStory = doc.querySelector("._5gxh")) != null
 	|| (selectedStory = doc.querySelector("._5qdv")) != null){
-	
-	// get the timestamp tag inside the <a> tag
+
+	// find the <a> tag that contains the story link
 	var storyLink;
 	if((storyLink = selectedStory.querySelector("a._5pcq")) != null
-	  || (storyLink = selectedStory.querySelector("span.fcg>a")) != null){
+	  || ((storyLink = selectedStory.querySelector(".fcg>a")) != null && storyLink.getAttribute("href") != "#")){
 	  open_url_func(storyLink, i.window);
 	} else {
-	  I.minibuffer.message("Cannot find story link");
+	  // for some special stories, the story link is hidden inside an <a> tag
+	  // within a <span> with class fwb. there are 2 span inside selectedStory
+	  // with class fwb, the one that contains the story link is the second one.
+	  var fwbElements = selectedStory.querySelectorAll(".fwb>a");
+	  if(fwbElements.length != 0){
+		storyLink = fwbElements[1];
+		open_url_func(storyLink, i.window);
+	  } else {
+		I.minibuffer.message("Cannot find timestamp link");
+	  }
 	}
-	// var timestamp = selectedStory.querySelector(".timestamp");
-	
-	// // check if it's null
-	// if(timestamp == null){
-	//   I.minibuffer.message("Cannot find timestamp link");
-	// } else {
-	//   // get the parent node <a> and open the url
-	//   var link = timestamp.parentNode;
-	//   open_url_func(link, i.window);
-	// }
   } else {
 	I.minibuffer.message("No selected story");
   }
