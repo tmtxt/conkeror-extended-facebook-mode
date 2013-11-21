@@ -334,11 +334,11 @@ interactive("cefm-open-current-story-new-buffer-background",
 			"Open selected story in new buffer background", function (I) {
 			  cefm_find_story_link(I, load_url_in_new_buffer_background);
 			});
-interactive("cefm-scroll-up-current-coversation",
+interactive("cefm-scroll-up-current-conversation",
 			"Scroll the current conversation up", function(I){
 			  cefm_scroll_current_conversation_up(I);
 			});
-interactive("cefm-scroll-down-current-coversation",
+interactive("cefm-scroll-down-current-conversation",
 			"Scroll the current conversation down", function(I){
 			  cefm_scroll_current_conversation_down(I);
 			});
