@@ -277,6 +277,32 @@ function cefm_find_story_link(I, open_url_func){
   }
 }
 
+/**
+ * Expand the content of the selected story if exists, otherwise, expand the
+ * first one found 
+ * @param I - The I object of the interactive command
+ */
+function cefm_expand_story(I){
+  var selectedStory = null;
+  var document = I.buffer.document;
+  var expandParent = null;
+  var expandElement = null;
+
+  // check if the selected story exists
+  if((selectedStory = cefm_find_selected_story(document)) != null){
+	expandParent = selectedStory;
+  } else {
+	expandParent = document;
+  }
+
+  // find the expand element to click on
+  if((expandElement = expandParent.querySelector(".text_exposed_link>a")) != null){
+	dom_node_click(expandElement);
+  } else {
+	I.minibuffer.message("Cannot find any expand element");
+  }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Interactive Commands
 interactive("cefm-open-friend-request",
@@ -319,5 +345,9 @@ interactive("cefm-cycle-conversations",
 			"Cycle through chat conversations", function(I){
 			  cefm_cycle_through_conversations(I);
 			});
+interactive("cefm-expand-content",
+		   "Expand the content of the selected story or the caption of the current photo", function(I){
+			 cefm_expand_story(I);
+		   });
 
 provide("conkeror-extended-facebook-mode");
