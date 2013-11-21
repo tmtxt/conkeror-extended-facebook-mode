@@ -19,13 +19,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 */
 
+// This mode is based on the Conkeror's built-in Facebook mode
+
 // TODO
 // function for extend the story content (see more...)
 
-// This mode is based on the Conkeror's built-in Facebook mode
-
-// include the default facebook mode
-require("facebook");
+// Include library
+require("facebook"); // the default Conkeror's Facebook mode
 
 ////////////////////////////////////////////////////////////////////////////////
 // Fallthrough keys for Facebook shortcut keys
@@ -38,6 +38,8 @@ define_key(facebook_keymap, "l", null, $fallthrough);
 define_key(facebook_keymap, "m", null, $fallthrough);
 define_key(facebook_keymap, "c", null, $fallthrough);
 
+////////////////////////////////////////////////////////////////////////////////
+// Function for clicking on element on page based on its css selector
 /**
  * Click on the button with the input css selector
  * @param the css selector of the button
@@ -54,37 +56,7 @@ function cefm_click_button(selector, button_name, I){
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Functions for performing other keys that fallthrough cannot take effect
-// open friend request panel
-interactive("facebook-open-friend-request", "Open Facebook Friend Requests panel",
-		   function(I){
-			 cefm_click_button("#fbRequestsJewel>a.jewelButton", "Friend Request", I);
-		   });
 
-// open friend request panel
-interactive("facebook-open-messages", "Open Facebook Messages panel",
-		   function(I){
-			 cefm_click_button("#fbMessagesJewel>a.jewelButton", "Messages", I);
-		   });
-
-// open notification panel
-interactive("facebook-open-notification", "Open Facebook Notification panel",
-		   function(I){
-			 cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
-		   });
-
-// open home page
-interactive("facebook-open-home", "Open Facebook Home page",
-		   function(I){
-			 cefm_click_button("#navHome>a", "Home", I);
-		   });
-
-// quick logout
-interactive("cefm-quick-logout", "Quickly logout from Facebook",
-		   function(I){
-			 cefm_click_button("#logout_form>label>input", "Logout", I);
-		   });
 
 ////////////////////////////////////////////////////////////////////////////////
 // Facebook chat interaction
@@ -191,10 +163,7 @@ function facebook_mode_cycle_through_conversations(I){
   }
 }
 
-// interactive commands for cycling through conversations
-interactive("facebook-cycle-conversations", null, function(I){
-  facebook_mode_cycle_through_conversations(I);
-});
+
 
 // scroll current chat conversation
 var facebook_mode_scroll_gap = 50;
@@ -239,15 +208,7 @@ function facebook_mode_scroll_current_conversation_down(I){
   facebook_mode_scroll_current_conversation(I, facebook_mode_scroll_gap);
 }
 
-// interactive commands for scrolling up current conversation
-interactive("facebook-scroll-up-current-coversation", null, function(I){
-  facebook_mode_scroll_current_conversation_up(I);
-});
 
-// interactive commands for scrolling down current conversation
-interactive("facebook-scroll-down-current-coversation", null, function(I){
-  facebook_mode_scroll_current_conversation_down(I);
-});
 
 ////////////////////////////////////////////////////////////////////////////////
 // Open the selected story when browsing with j and k
@@ -284,17 +245,49 @@ function facebook_mode_find_story_link(I, open_url_func){
   } else {
 	I.minibuffer.message("No selected story");
   }
-
 }
 
-// interactive command to open selected story
-// new buffer
-interactive("facebook-open-current-story-new-buffer", null, function (I) {
-  facebook_mode_find_story_link(I, load_url_in_new_buffer);
-});
-// new buffer background
-interactive("facebook-open-current-story-new-buffer-background", null, function (I) {
-  facebook_mode_find_story_link(I, load_url_in_new_buffer_background);
-});
+////////////////////////////////////////////////////////////////////////////////
+// Interactive Commands
+interactive("cefm-open-friend-request",
+			"Open Facebook Friend Requests panel", function(I){
+			  cefm_click_button("#fbRequestsJewel>a.jewelButton", "Friend Request", I);
+			});
+interactive("cefm-open-messages",
+			"Open Facebook Messages panel", function(I){
+			  cefm_click_button("#fbMessagesJewel>a.jewelButton", "Messages", I);
+			});
+interactive("cefm-open-notification",
+			"Open Facebook Notification panel", function(I){
+			  cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
+			});
+interactive("cefm-open-home",
+			"Open Facebook Home page", function(I){
+			  cefm_click_button("#navHome>a", "Home", I);
+			});
+interactive("cefm-quick-logout",
+			"Quickly logout from Facebook", function(I){
+			  cefm_click_button("#logout_form>label>input", "Logout", I);
+			});
+interactive("facebook-open-current-story-new-buffer",
+			"Open selected story in new buffer", function (I) {
+			  facebook_mode_find_story_link(I, load_url_in_new_buffer);
+			});
+interactive("facebook-open-current-story-new-buffer-background",
+			"Open selected story in new buffer background", function (I) {
+			  facebook_mode_find_story_link(I, load_url_in_new_buffer_background);
+			});
+interactive("facebook-scroll-up-current-coversation",
+			"Scroll the current conversation up", function(I){
+			  facebook_mode_scroll_current_conversation_up(I);
+			});
+interactive("facebook-scroll-down-current-coversation",
+			"Scroll the current conversation down", function(I){
+			  facebook_mode_scroll_current_conversation_down(I);
+			});
+interactive("facebook-cycle-conversations",
+			"Cycle through chat conversations", function(I){
+			  facebook_mode_cycle_through_conversations(I);
+			});
 
 provide("conkeror-extended-facebook-mode");
