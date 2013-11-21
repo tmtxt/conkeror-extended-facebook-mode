@@ -40,13 +40,13 @@ define_key(facebook_keymap, "c", null, $fallthrough);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Variables used
-var facebook_mode_conversation_not_found
-= "Cannot find conversation div"; // error message
-var facebook_mode_no_active_conversation
-= "No active conversations. Press q to find a friend to chat."; // error message
-var facebook_mode_no_focused_conversation
-= "No focused conversation. Focus on one conversation first"; // error message
-var facebook_mode_scroll_gap = 50; // scroll gap
+var cefm_conversation_not_found_message
+= "Cannot find conversation div";
+var cefm_no_active_conversation_message
+= "No active conversations. Press q to find a friend to chat.";
+var cefm_no_focused_conversation_message
+= "No focused conversation. Focus on one conversation first";
+var facebook_mode_scroll_gap = 50;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Some functions needed for the mode
@@ -70,7 +70,7 @@ function cefm_click_button(selector, button_name, I){
  * Check if the focus is on any conversations or not
  * @param document - The document object of the current buffer (I.buffer.document)
  */
-function facebook_mode_is_focus_on_conversation(document){
+function cefm_is_focus_on_conversation(document){
   var activeElement = document.activeElement;
   if(activeElement.classList.contains("_552m")){
 	return true;
@@ -84,7 +84,7 @@ function facebook_mode_is_focus_on_conversation(document){
  * @param document - The document object of the current buffer (I.buffer.document)
  * @return Returns the conversation <div> object if it's found, otherwise, returns null
  */
-function facebook_mode_find_conversation_div(document){
+function cefm_find_conversation_div(document){
   var activeElement = document.activeElement;
   // find the conversation div that is nth-level parent of the active element
   var p = activeElement.parentNode;
@@ -110,7 +110,7 @@ function facebook_mode_find_conversation_div(document){
  * @param document - The document object of the current buffer (I.buffer.document)
  * @return Returns the conversation <div> array there are any conversation <div> exists, otherwise, returns null
  */
-function facebook_mode_find_conversation_div_array(document){
+function cefm_find_conversation_div_array(document){
   var conversationDiv = document.querySelectorAll("._50-v.fbNub._50mz._50m_");
   if(conversationDiv.length == 0){
 	return null;
@@ -123,7 +123,7 @@ function facebook_mode_find_conversation_div_array(document){
  * Find the <textarea> array that contains all the <textarea>s inside the conversation <div>
  * @param document - The document object of the current buffer (I.buffer.document)
  */
-function facebook_mode_find_conversation_textarea_array(document){
+function cefm_find_conversation_textarea_array(document){
   return document.querySelectorAll("._552m");
 }
 
@@ -131,24 +131,24 @@ function facebook_mode_find_conversation_textarea_array(document){
  * Cycle through conversations
  * @param I - The I object of the interactive command
  */
-function facebook_mode_cycle_through_conversations(I){
+function cefm_cycle_through_conversations(I){
   // get the document object
   var document = I.buffer.document;
 
   // query the div(s) that contain the chat conversations and the textareas for
   // typing chat message
   var conversationDiv;
-  var conversationTextareas = facebook_mode_find_conversation_textarea_array(document);
+  var conversationTextareas = cefm_find_conversation_textarea_array(document);
 
   // check if there are any active conversations
-  if((conversationDiv = facebook_mode_find_conversation_div_array(document)) != null){
+  if((conversationDiv = cefm_find_conversation_div_array(document)) != null){
 	// check if the focus is on any conversation or not
-	if(facebook_mode_is_focus_on_conversation(document)){
+	if(cefm_is_focus_on_conversation(document)){
 	  // find the conversation div that is nth-level parent of the active
 	  // element
 	  var p;
-	  if((p = facebook_mode_find_conversation_div(document)) == null){
-		I.minibuffer.message(facebook_mode_conversation_not_found);
+	  if((p = cefm_find_conversation_div(document)) == null){
+		I.minibuffer.message(cefm_conversation_not_found_message);
 	  } else {
 		// loop through the conversationDiv to find the match div tag
 		for(var i=0; i<conversationDiv.length; i++){
@@ -169,7 +169,7 @@ function facebook_mode_cycle_through_conversations(I){
   	  conversationTextareas[0].focus();
 	}
   } else {
-	I.minibuffer.message(facebook_mode_no_active_conversation);
+	I.minibuffer.message(cefm_no_active_conversation_message);
   }
 }
 
@@ -178,24 +178,24 @@ function facebook_mode_cycle_through_conversations(I){
  * @param I - The I object of the interactive command
  * @param scroll_gap - The gap to scroll (positive for down, negative for scroll up)
  */
-function facebook_mode_scroll_current_conversation(I, scroll_gap){
+function cefm_scroll_current_conversation(I, scroll_gap){
   // get the document buffer
   var document = I.buffer.document;
 
   // query the div(s) that contain the chat conversations and the textareas for
   // typing chat message
   var conversationDiv;
-  var conversationTextareas = facebook_mode_find_conversation_textarea_array(document);
+  var conversationTextareas = cefm_find_conversation_textarea_array(document);
 
   // check if there are any active conversations
-  if((conversationDiv = facebook_mode_find_conversation_div_array(document)) != null){
+  if((conversationDiv = cefm_find_conversation_div_array(document)) != null){
 	// check if the focus is on any conversation or not
-	if(facebook_mode_is_focus_on_conversation(document)){
+	if(cefm_is_focus_on_conversation(document)){
 	  // find the conversation div that is nth-level parent of the active
 	  // element
 	  var p;
-	  if((p = facebook_mode_find_conversation_div(document)) == null){
-		I.minibuffer.message(facebook_mode_conversation_not_found);
+	  if((p = cefm_find_conversation_div(document)) == null){
+		I.minibuffer.message(cefm_conversation_not_found_message);
 	  } else {
 		// query the body of the chat (the scrollable part)
 		var chat_body = p.querySelector(".fbNubFlyoutBody");
@@ -203,10 +203,10 @@ function facebook_mode_scroll_current_conversation(I, scroll_gap){
 		chat_body.scrollTop = chat_body.scrollTop + scroll_gap;
 	  }
 	} else {
-	  I.minibuffer.message(facebook_mode_no_focused_conversation);
+	  I.minibuffer.message(cefm_no_focused_conversation_message);
 	}
   } else {
-	I.minibuffer.message(facebook_mode_no_active_conversation);
+	I.minibuffer.message(cefm_no_active_conversation_message);
   }  
 }
 
@@ -214,16 +214,16 @@ function facebook_mode_scroll_current_conversation(I, scroll_gap){
  * Scroll current chat conversation up
  * @param I - The I object of the interactive command
  */
-function facebook_mode_scroll_current_conversation_up(I){
-  facebook_mode_scroll_current_conversation(I, 0 - facebook_mode_scroll_gap);
+function cefm_scroll_current_conversation_up(I){
+  cefm_scroll_current_conversation(I, 0 - facebook_mode_scroll_gap);
 }
 
 /**
  * Scroll current chat conversation down
  * @param I - The I object of the interactive command
  */
-function facebook_mode_scroll_current_conversation_down(I){
-  facebook_mode_scroll_current_conversation(I, facebook_mode_scroll_gap);
+function cefm_scroll_current_conversation_down(I){
+  cefm_scroll_current_conversation(I, facebook_mode_scroll_gap);
 }
 
 /**
@@ -231,7 +231,7 @@ function facebook_mode_scroll_current_conversation_down(I){
  * @param I - The I object of the interactive command
  * @param open_url_func - The function for opening the url
  */
-function facebook_mode_find_story_link(I, open_url_func){
+function cefm_find_story_link(I, open_url_func){
   // get the document
   var doc = I.buffer.document;
   
@@ -287,25 +287,25 @@ interactive("cefm-quick-logout",
 			"Quickly logout from Facebook", function(I){
 			  cefm_click_button("#logout_form>label>input", "Logout", I);
 			});
-interactive("facebook-open-current-story-new-buffer",
+interactive("cefm-open-current-story-new-buffer",
 			"Open selected story in new buffer", function (I) {
-			  facebook_mode_find_story_link(I, load_url_in_new_buffer);
+			  cefm_find_story_link(I, load_url_in_new_buffer);
 			});
-interactive("facebook-open-current-story-new-buffer-background",
+interactive("cefm-open-current-story-new-buffer-background",
 			"Open selected story in new buffer background", function (I) {
-			  facebook_mode_find_story_link(I, load_url_in_new_buffer_background);
+			  cefm_find_story_link(I, load_url_in_new_buffer_background);
 			});
-interactive("facebook-scroll-up-current-coversation",
+interactive("cefm-scroll-up-current-coversation",
 			"Scroll the current conversation up", function(I){
-			  facebook_mode_scroll_current_conversation_up(I);
+			  cefm_scroll_current_conversation_up(I);
 			});
-interactive("facebook-scroll-down-current-coversation",
+interactive("cefm-scroll-down-current-coversation",
 			"Scroll the current conversation down", function(I){
-			  facebook_mode_scroll_current_conversation_down(I);
+			  cefm_scroll_current_conversation_down(I);
 			});
-interactive("facebook-cycle-conversations",
+interactive("cefm-cycle-conversations",
 			"Cycle through chat conversations", function(I){
-			  facebook_mode_cycle_through_conversations(I);
+			  cefm_cycle_through_conversations(I);
 			});
 
 provide("conkeror-extended-facebook-mode");
