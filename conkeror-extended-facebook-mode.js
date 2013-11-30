@@ -258,6 +258,10 @@ function cefm_find_story_link(I, open_url_func){
   	// query all the possible potential links inside the selectedStory
   	var temp;
   	var tempArray;
+	temp = selected_story.querySelector("._5pc1>a");
+	story_link_array.push(temp);
+	temp = selected_story.querySelector("a._5pc0");
+	story_link_array.push(temp);
   	temp = selected_story.querySelector("a._5pcq");
   	story_link_array.push(temp);
 	temp = selected_story.querySelector(".uiStreamSource>a");
