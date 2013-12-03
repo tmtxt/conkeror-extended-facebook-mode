@@ -260,10 +260,6 @@ function cefm_find_story_link(I, open_url_func){
   	var tempArray;
   	temp = selected_story.querySelector("a._5pcq");
   	story_link_array.push(temp);
-	temp = selected_story.querySelector("._5pc1>a");
-	story_link_array.push(temp);
-	temp = selected_story.querySelector("a._5pc0");
-	story_link_array.push(temp);
 	temp = selected_story.querySelector(".uiStreamSource>a");
 	story_link_array.push(temp);
   	tempArray = selected_story.querySelectorAll(".fcg>a");
