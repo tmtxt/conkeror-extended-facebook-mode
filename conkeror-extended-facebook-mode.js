@@ -230,6 +230,7 @@ function cefm_scroll_current_conversation_down(I){
  */
 function cefm_find_selected_story(document){
   var selectedStory = null;
+  
   if((selectedStory = document.querySelector(".selectedStorySimple")) != null
 	|| (selectedStory = document.querySelector("._5gxh")) != null
 	|| (selectedStory = document.querySelector("._5qdv")) != null){
@@ -276,8 +277,8 @@ function cefm_find_story_link(I, open_url_func){
   	// https://www.facebook.com/photo.php?fbid=681522898533972&set=a.451364638216467.109262.100000288032725&type=1
   	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/photo.php)[A-Za-z0-9?=.&/]+$");
   	regex_array.push(regex);
-  	// https://www.facebook.com/cellphones.befirst.always/posts/698666850151154
-  	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/posts/)[A-Za-z0-9:./]+$");
+  	// https://www.facebook.com/candycandy198/posts/273678246115411?stream_ref=1
+  	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/posts/)[A-Za-z0-9:./?_=]+$");
   	regex_array.push(regex);
   	// https://www.facebook.com/groups/377906112324180/permalink/482710721843718/
   	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/groups/)[A-Za-z0-9.]+(/permalink/)[A-Za-z0-9./]+$");
