@@ -275,7 +275,7 @@ function cefm_find_story_link(I, open_url_func){
   	var regex_array = new Array();
   	var regex;
   	// https://www.facebook.com/photo.php?fbid=681522898533972&set=a.451364638216467.109262.100000288032725&type=1
-  	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/photo.php)[A-Za-z0-9?=.&/]+$");
+  	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/photo.php)[A-Za-z0-9?=.&/_]+$");
   	regex_array.push(regex);
   	// https://www.facebook.com/candycandy198/posts/273678246115411?stream_ref=1
   	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/posts/)[A-Za-z0-9:./?_=]+$");
