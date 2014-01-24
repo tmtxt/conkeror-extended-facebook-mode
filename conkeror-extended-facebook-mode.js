@@ -43,7 +43,7 @@ var cefm_no_active_conversation_message
 = "No active conversations. Press q to find a friend to chat.";
 var cefm_no_focused_conversation_message
 = "No focused conversation. Focus on one conversation first";
-var facebook_mode_scroll_gap = 50;
+var cefm_scroll_gap = 50;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Some functions needed for the mode
@@ -212,7 +212,7 @@ function cefm_scroll_current_conversation(I, scroll_gap){
  * @param I - The I object of the interactive command
  */
 function cefm_scroll_current_conversation_up(I){
-  cefm_scroll_current_conversation(I, 0 - facebook_mode_scroll_gap);
+  cefm_scroll_current_conversation(I, 0 - cefm_scroll_gap);
 }
 
 /**
@@ -220,7 +220,7 @@ function cefm_scroll_current_conversation_up(I){
  * @param I - The I object of the interactive command
  */
 function cefm_scroll_current_conversation_down(I){
-  cefm_scroll_current_conversation(I, facebook_mode_scroll_gap);
+  cefm_scroll_current_conversation(I, cefm_scroll_gap);
 }
 
 /**
