@@ -108,7 +108,7 @@ function cefm_find_conversation_div(document){
  * @return Returns the conversation <div> array there are any conversation <div> exists, otherwise, returns null
  */
 function cefm_find_conversation_div_array(document){
-  var conversationDiv = document.querySelectorAll("._50-v.fbNub._50mz._50m_");
+  var conversationDiv = document.querySelectorAll("._50-v.fbNub._50mz");
   if(conversationDiv.length == 0){
 	return null;
   } else {
