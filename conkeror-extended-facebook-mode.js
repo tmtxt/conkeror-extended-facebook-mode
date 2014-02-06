@@ -1,21 +1,21 @@
 /* conkeror-extended-facebook-mode
    Conkeror Extended Facebook Mode
 
-Copyright (C) 2013 Trần Xuân Trường <me@truongtx.me>
+   Copyright (C) 2013 Trần Xuân Trường <me@truongtx.me>
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License
+   as published by the Free Software Foundation; either version 2
+   of the License, or (at your option) any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 */
 
@@ -38,11 +38,11 @@ define_key(facebook_keymap, "p", null, $fallthrough);
 ////////////////////////////////////////////////////////////////////////////////
 // Variables used
 var cefm_conversation_not_found_message
-= "Cannot find conversation div";
+  = "Cannot find conversation div";
 var cefm_no_active_conversation_message
-= "No active conversations. Press q to find a friend to chat.";
+  = "No active conversations. Press q to find a friend to chat.";
 var cefm_no_focused_conversation_message
-= "No focused conversation. Focus on one conversation first";
+  = "No focused conversation. Focus on one conversation first";
 var cefm_scroll_gap = 50;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -52,7 +52,7 @@ var cefm_scroll_gap = 50;
  * @param selector - The css selector of the button
  * @param button_name - The name of the button, can be any name that you like
  * @param I - The I object of the interactive command
-*/
+ */
 function cefm_click_button(selector, button_name, I){
   var document = I.buffer.document;
   var button = document.querySelector(selector);
@@ -232,12 +232,12 @@ function cefm_find_selected_story(document){
   var selectedStory = null;
   
   if((selectedStory = document.querySelector(".selectedStorySimple")) != null
-	|| (selectedStory = document.querySelector("._5gxh")) != null
-	|| (selectedStory = document.querySelector("._5qdv")) != null){
+	 || (selectedStory = document.querySelector("._5gxh")) != null
+	 || (selectedStory = document.querySelector("._5qdv")) != null){
   }
   return selectedStory;
 }
-   
+
 /**
  * Inspect and find the link of selected story
  * @param I - The I object of the interactive command
@@ -344,51 +344,124 @@ function cefm_expand_story(I){
   }
 }
 
+// check if the fbJewel panel (Friend Requests, Messages, Notifications,...) is
+// currently closed or opened
+// panelId: the id of the panel div tag (usually "fbMessagesFlyout",
+// "fbNotificationsFlyout", "fbRequestsFlyout")
+// I: the I object of the interactive command
+function cefm_is_jewel_panel_open(panelId, I){
+  var doc = I.buffer.document;
+
+  var element = doc.querySelector("#" + panelId);
+  if(element == null){
+	return false;
+  } else {
+	if(element.classList.contains("toggleTargetClosed")){
+	  return false;
+	} else {
+	  return true;
+	}
+  }
+}
+
+// browser object classes link for notification, friend requests and messages
+define_browser_object_class("facebook-notification-links", null,
+							xpath_browser_object_handler("//a[@class='_33e']"),
+							$hint = "select notification");
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // Interactive Commands
 interactive("cefm-open-friend-request",
 			"Open Facebook Friend Requests panel", function(I){
 			  cefm_click_button("#fbRequestsJewel>a.jewelButton", "Friend Request", I);
 			});
+
 interactive("cefm-open-messages",
 			"Open Facebook Messages panel", function(I){
 			  cefm_click_button("#fbMessagesJewel>a.jewelButton", "Messages", I);
 			});
+
 interactive("cefm-open-notification",
 			"Open Facebook Notification panel", function(I){
 			  cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
 			});
+
 interactive("cefm-open-home",
 			"Open Facebook Home page", function(I){
 			  cefm_click_button("#navHome>a", "Home", I);
 			});
+
 interactive("cefm-quick-logout",
 			"Quickly logout from Facebook", function(I){
 			  cefm_click_button("#logout_form>label>input", "Logout", I);
 			});
+
 interactive("cefm-open-current-story-new-buffer",
 			"Open selected story in new buffer", function (I) {
 			  cefm_find_story_link(I, load_url_in_new_buffer);
 			});
+
 interactive("cefm-open-current-story-new-buffer-background",
 			"Open selected story in new buffer background", function (I) {
 			  cefm_find_story_link(I, load_url_in_new_buffer_background);
 			});
+
 interactive("cefm-scroll-up-current-conversation",
 			"Scroll the current conversation up", function(I){
 			  cefm_scroll_current_conversation_up(I);
 			});
+
 interactive("cefm-scroll-down-current-conversation",
 			"Scroll the current conversation down", function(I){
 			  cefm_scroll_current_conversation_down(I);
 			});
+
 interactive("cefm-cycle-conversations",
 			"Cycle through chat conversations", function(I){
 			  cefm_cycle_through_conversations(I);
 			});
+
 interactive("cefm-expand-content",
-		   "Expand the content of the selected story or the caption of the current photo", function(I){
-			 cefm_expand_story(I);
-		   });
+			"Expand the content of the selected story or the caption of the current photo", function(I){
+			  cefm_expand_story(I);
+			});
+
+interactive("cefm-follow-notifications", "Follow notification links", function(I){
+  if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
+	cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
+  var element = yield read_browser_object(I);
+  try {
+    element = load_spec(element);
+    if (I.forced_charset)
+      element.forced_charset = I.forced_charset;
+  } catch (e) {}
+  browser_object_follow(I.buffer, FOLLOW_DEFAULT, element);
+}, $browser_object = browser_object_facebook_notification_links);
+
+interactive("cefm-follow-notifications-new-buffer", "Follow notification links in new buffer", function(I){
+  if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
+	cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
+  var element = yield read_browser_object(I);
+  try {
+    element = load_spec(element);
+    if (I.forced_charset)
+      element.forced_charset = I.forced_charset;
+  } catch (e) {}
+  browser_object_follow(I.buffer, OPEN_NEW_BUFFER, element);
+}, $browser_object = browser_object_facebook_notification_links);
+
+interactive("cefm-follow-notifications-new-buffer-background",
+			"Follow notification links in new buffer background", function(I){
+  if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
+	cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
+  var element = yield read_browser_object(I);
+  try {
+    element = load_spec(element);
+    if (I.forced_charset)
+      element.forced_charset = I.forced_charset;
+  } catch (e) {}
+  browser_object_follow(I.buffer, OPEN_NEW_BUFFER_BACKGROUND, element);
+}, $browser_object = browser_object_facebook_notification_links);
 
 provide("conkeror-extended-facebook-mode");
