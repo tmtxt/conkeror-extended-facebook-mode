@@ -292,6 +292,9 @@ function cefm_find_story_link(I, open_url_func){
 	// https://www.facebook.com/emilyosment10392/activity/3489815221361
 	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/activity/)[A-Za-z0-9:./]+$");
 	regex_array.push(regex);
+	// https://www.facebook.com/TapChiChimLon/photos/a.173301119366880.49325/729867413710245/?type=1
+	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/photos)[A-Za-z0-9?=.&/_]+$");
+	regex_array.push(regex);
 
   	// loop the story_link_array
   	var match = false;
@@ -369,6 +372,9 @@ define_browser_object_class("facebook-notification-links", null,
 							xpath_browser_object_handler("//a[@class='_33e']"),
 							$hint = "select notification");
 
+define_browser_object_class("facebook-messages-links", null,
+							xpath_browser_object_handler("//a[@class='messagesContent']"),
+							$hint = "select notification");
 
 ////////////////////////////////////////////////////////////////////////////////
 // Interactive Commands
@@ -453,15 +459,38 @@ interactive("cefm-follow-notifications-new-buffer", "Follow notification links i
 
 interactive("cefm-follow-notifications-new-buffer-background",
 			"Follow notification links in new buffer background", function(I){
-  if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
-	cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
+			  if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
+				cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
+			  var element = yield read_browser_object(I);
+			  try {
+				element = load_spec(element);
+				if (I.forced_charset)
+				  element.forced_charset = I.forced_charset;
+			  } catch (e) {}
+			  browser_object_follow(I.buffer, OPEN_NEW_BUFFER_BACKGROUND, element);
+			}, $browser_object = browser_object_facebook_notification_links);
+
+interactive("cefm-follow-messages", "Follow messages conversation", function(I){
+  if(!cefm_is_jewel_panel_open("fbMessagesFlyout", I))
+	cefm_click_button("#fbMessagesJewel>a.jewelButton", "Messages", I);
   var element = yield read_browser_object(I);
   try {
     element = load_spec(element);
     if (I.forced_charset)
       element.forced_charset = I.forced_charset;
   } catch (e) {}
-  browser_object_follow(I.buffer, OPEN_NEW_BUFFER_BACKGROUND, element);
-}, $browser_object = browser_object_facebook_notification_links);
+  browser_object_follow(I.buffer, FOLLOW_DEFAULT, element);
+}, $browser_object = browser_object_facebook_messages_links);
+
+interactive("cefm-follow-multiple-notifications", "",
+		   function(I){
+			 var a = yield I.minibuffer.read($prompt = "Number of notifications to open: ");
+			 if(isNaN(a)){
+			   I.minibuffer.message("Please input a number!");
+			 } else {
+			   a = parseInt(a);
+			   
+			 }
+		   });
 
 provide("conkeror-extended-facebook-mode");
