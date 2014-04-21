@@ -57,9 +57,9 @@ function cefm_click_button(selector, button_name, I){
   var document = I.buffer.document;
   var button = document.querySelector(selector);
   if (button != null) {
-	dom_node_click(button);
+	  dom_node_click(button);
   } else {
-	I.minibuffer.message("Cannot find " + button_name + " button");
+	  I.minibuffer.message("Cannot find " + button_name + " button");
   }
 }
 
@@ -70,9 +70,9 @@ function cefm_click_button(selector, button_name, I){
 function cefm_is_focus_on_conversation(document){
   var activeElement = document.activeElement;
   if(activeElement.classList.contains("_552m")){
-	return true;
+	  return true;
   } else {
-	return false;
+	  return false;
   }
 }
 
@@ -86,19 +86,19 @@ function cefm_find_conversation_div(document){
   // find the conversation div that is nth-level parent of the active element
   var p = activeElement.parentNode;
   while(p!=document){
-	if(p.classList.contains("_50-v")
-	   && p.classList.contains("fbNub")
-	   && p.classList.contains("_50mz")){
-	  break;
-	} else {
-	  p = p.parentNode;
-	}
+	  if(p.classList.contains("_50-v")
+	     && p.classList.contains("fbNub")
+	     && p.classList.contains("_50mz")){
+	    break;
+	  } else {
+	    p = p.parentNode;
+	  }
   }
   // check if it can find
   if(p == document){
-	return null;
+	  return null;
   } else {
-	return p;
+	  return p;
   }
 }
 
@@ -110,9 +110,9 @@ function cefm_find_conversation_div(document){
 function cefm_find_conversation_div_array(document){
   var conversationDiv = document.querySelectorAll("._50-v.fbNub._50mz");
   if(conversationDiv.length == 0){
-	return null;
+	  return null;
   } else {
-	return conversationDiv;
+	  return conversationDiv;
   }
 }
 
@@ -139,34 +139,34 @@ function cefm_cycle_through_conversations(I){
 
   // check if there are any active conversations
   if((conversationDiv = cefm_find_conversation_div_array(document)) != null){
-	// check if the focus is on any conversation or not
-	if(cefm_is_focus_on_conversation(document)){
-	  // find the conversation div that is nth-level parent of the active
-	  // element
-	  var p;
-	  if((p = cefm_find_conversation_div(document)) == null){
-		I.minibuffer.message(cefm_conversation_not_found_message);
+	  // check if the focus is on any conversation or not
+	  if(cefm_is_focus_on_conversation(document)){
+	    // find the conversation div that is nth-level parent of the active
+	    // element
+	    var p;
+	    if((p = cefm_find_conversation_div(document)) == null){
+		    I.minibuffer.message(cefm_conversation_not_found_message);
+	    } else {
+		    // loop through the conversationDiv to find the match div tag
+		    for(var i=0; i<conversationDiv.length; i++){
+		      if(p.isEqualNode(conversationDiv[i])){
+			      // focus on the next, if it's the end of array, focus on the first
+			      if(i == conversationDiv.length - 1){
+			        // end of array, focus on the first
+			        conversationTextareas[0].focus();
+			      } else {
+			        // focus on the next
+			        conversationTextareas[i+1].focus();
+			      }
+		      }
+		    }
+	    }
 	  } else {
-		// loop through the conversationDiv to find the match div tag
-		for(var i=0; i<conversationDiv.length; i++){
-		  if(p.isEqualNode(conversationDiv[i])){
-			// focus on the next, if it's the end of array, focus on the first
-			if(i == conversationDiv.length - 1){
-			  // end of array, focus on the first
-			  conversationTextareas[0].focus();
-			} else {
-			  // focus on the next
-			  conversationTextareas[i+1].focus();
-			}
-		  }
-		}
-	  }
-	} else {
-	  // focus on the first
+	    // focus on the first
   	  conversationTextareas[0].focus();
-	}
+	  }
   } else {
-	I.minibuffer.message(cefm_no_active_conversation_message);
+	  I.minibuffer.message(cefm_no_active_conversation_message);
   }
 }
 
@@ -186,24 +186,24 @@ function cefm_scroll_current_conversation(I, scroll_gap){
 
   // check if there are any active conversations
   if((conversationDiv = cefm_find_conversation_div_array(document)) != null){
-	// check if the focus is on any conversation or not
-	if(cefm_is_focus_on_conversation(document)){
-	  // find the conversation div that is nth-level parent of the active
-	  // element
-	  var p;
-	  if((p = cefm_find_conversation_div(document)) == null){
-		I.minibuffer.message(cefm_conversation_not_found_message);
+	  // check if the focus is on any conversation or not
+	  if(cefm_is_focus_on_conversation(document)){
+	    // find the conversation div that is nth-level parent of the active
+	    // element
+	    var p;
+	    if((p = cefm_find_conversation_div(document)) == null){
+		    I.minibuffer.message(cefm_conversation_not_found_message);
+	    } else {
+		    // query the body of the chat (the scrollable part)
+		    var chat_body = p.querySelector(".fbNubFlyoutBody");
+		    // scroll to top
+		    chat_body.scrollTop = chat_body.scrollTop + scroll_gap;
+	    }
 	  } else {
-		// query the body of the chat (the scrollable part)
-		var chat_body = p.querySelector(".fbNubFlyoutBody");
-		// scroll to top
-		chat_body.scrollTop = chat_body.scrollTop + scroll_gap;
+	    I.minibuffer.message(cefm_no_focused_conversation_message);
 	  }
-	} else {
-	  I.minibuffer.message(cefm_no_focused_conversation_message);
-	}
   } else {
-	I.minibuffer.message(cefm_no_active_conversation_message);
+	  I.minibuffer.message(cefm_no_active_conversation_message);
   }  
 }
 
@@ -232,8 +232,8 @@ function cefm_find_selected_story(document){
   var selectedStory = null;
   
   if((selectedStory = document.querySelector(".selectedStorySimple")) != null
-	 || (selectedStory = document.querySelector("._5gxh")) != null
-	 || (selectedStory = document.querySelector("._5qdv")) != null){
+	   || (selectedStory = document.querySelector("._5gxh")) != null
+	   || (selectedStory = document.querySelector("._5qdv")) != null){
   }
   return selectedStory;
 }
@@ -257,8 +257,8 @@ function cefm_find_story_link(I, open_url_func){
   	var tempArray;
   	temp = selected_story.querySelector("a._5pcq");
   	story_link_array.push(temp);
-	temp = selected_story.querySelector(".uiStreamSource>a");
-	story_link_array.push(temp);
+	  temp = selected_story.querySelector(".uiStreamSource>a");
+	  story_link_array.push(temp);
   	tempArray = selected_story.querySelectorAll(".fcg>a");
   	for(i=0; i<tempArray.length; i++){
   	  story_link_array.push(tempArray[i]);
@@ -266,8 +266,8 @@ function cefm_find_story_link(I, open_url_func){
   	tempArray = selected_story.querySelectorAll(".fwb");
   	for(i=0; i<tempArray.length; i++){
   	  var tempArray2 = tempArray[i].querySelectorAll("a");
-  	  for(j=0; j<tempArray2.length; j++){
-  		story_link_array.push(tempArray2[j]);
+  	  for(var j=0; j<tempArray2.length; j++){
+  		  story_link_array.push(tempArray2[j]);
   	  }
   	}
 
@@ -289,12 +289,15 @@ function cefm_find_story_link(I, open_url_func){
   	// https://www.facebook.com/permalink.php?story_fbid=afjslkjks
   	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/permalink.php)[A-Za-z0-9_?=/&]+$");
   	regex_array.push(regex);
-	// https://www.facebook.com/emilyosment10392/activity/3489815221361
-	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/activity/)[A-Za-z0-9:./]+$");
-	regex_array.push(regex);
-	// https://www.facebook.com/TapChiChimLon/photos/a.173301119366880.49325/729867413710245/?type=1
-	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/photos)[A-Za-z0-9?=.&/_]+$");
-	regex_array.push(regex);
+	  // https://www.facebook.com/emilyosment10392/activity/3489815221361
+	  regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/activity/)[A-Za-z0-9:./]+$");
+	  regex_array.push(regex);
+	  // https://www.facebook.com/TapChiChimLon/photos/a.173301119366880.49325/729867413710245/?type=1
+	  regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/photos)[A-Za-z0-9?=.&/_]+$");
+	  regex_array.push(regex);
+	  // https://www.facebook.com/groups/243388739045691/permalink/735257363192157/?stream_ref=1
+	  regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/groups/)[A-Za-z0-9.]+(/permalink/)[A-Za-z0-9?=.&/_]+$");
+	  regex_array.push(regex);
 
   	// loop the story_link_array
   	var match = false;
@@ -315,7 +318,7 @@ function cefm_find_story_link(I, open_url_func){
   	if(!match){
   	  I.minibuffer.message("Cannot find story link");
   	}
-	
+	  
   } else {
   	I.minibuffer.message("No selected story");
   }
@@ -334,16 +337,16 @@ function cefm_expand_story(I){
 
   // check if the selected story exists
   if((selectedStory = cefm_find_selected_story(document)) != null){
-	expandParent = selectedStory;
+	  expandParent = selectedStory;
   } else {
-	expandParent = document;
+	  expandParent = document;
   }
 
   // find the expand element to click on
   if((expandElement = expandParent.querySelector(".text_exposed_link>a")) != null){
-	dom_node_click(expandElement);
+	  dom_node_click(expandElement);
   } else {
-	I.minibuffer.message("Cannot find any expand element");
+	  I.minibuffer.message("Cannot find any expand element");
   }
 }
 
@@ -357,85 +360,85 @@ function cefm_is_jewel_panel_open(panelId, I){
 
   var element = doc.querySelector("#" + panelId);
   if(element == null){
-	return false;
-  } else {
-	if(element.classList.contains("toggleTargetClosed")){
 	  return false;
-	} else {
-	  return true;
-	}
+  } else {
+	  if(element.classList.contains("toggleTargetClosed")){
+	    return false;
+	  } else {
+	    return true;
+	  }
   }
 }
 
 // browser object classes link for notification, friend requests and messages
 define_browser_object_class("facebook-notification-links", null,
-							xpath_browser_object_handler("//a[@class='_33e']"),
-							$hint = "select notification");
+							              xpath_browser_object_handler("//a[@class='_33e']"),
+							              $hint = "select notification");
 
 define_browser_object_class("facebook-messages-links", null,
-							xpath_browser_object_handler("//a[@class='messagesContent']"),
-							$hint = "select notification");
+							              xpath_browser_object_handler("//a[@class='messagesContent']"),
+							              $hint = "select notification");
 
 ////////////////////////////////////////////////////////////////////////////////
 // Interactive Commands
 interactive("cefm-open-friend-request",
-			"Open Facebook Friend Requests panel", function(I){
-			  cefm_click_button("#fbRequestsJewel>a.jewelButton", "Friend Request", I);
-			});
+			      "Open Facebook Friend Requests panel", function(I){
+			        cefm_click_button("#fbRequestsJewel>a.jewelButton", "Friend Request", I);
+			      });
 
 interactive("cefm-open-messages",
-			"Open Facebook Messages panel", function(I){
-			  cefm_click_button("#fbMessagesJewel>a.jewelButton", "Messages", I);
-			});
+			      "Open Facebook Messages panel", function(I){
+			        cefm_click_button("#fbMessagesJewel>a.jewelButton", "Messages", I);
+			      });
 
 interactive("cefm-open-notification",
-			"Open Facebook Notification panel", function(I){
-			  cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
-			});
+			      "Open Facebook Notification panel", function(I){
+			        cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
+			      });
 
 interactive("cefm-open-home",
-			"Open Facebook Home page", function(I){
-			  cefm_click_button("#navHome>a", "Home", I);
-			});
+			      "Open Facebook Home page", function(I){
+			        cefm_click_button("#navHome>a", "Home", I);
+			      });
 
 interactive("cefm-quick-logout",
-			"Quickly logout from Facebook", function(I){
-			  cefm_click_button("#logout_form>label>input", "Logout", I);
-			});
+			      "Quickly logout from Facebook", function(I){
+			        cefm_click_button("#logout_form>label>input", "Logout", I);
+			      });
 
 interactive("cefm-open-current-story-new-buffer",
-			"Open selected story in new buffer", function (I) {
-			  cefm_find_story_link(I, load_url_in_new_buffer);
-			});
+			      "Open selected story in new buffer", function (I) {
+			        cefm_find_story_link(I, load_url_in_new_buffer);
+			      });
 
 interactive("cefm-open-current-story-new-buffer-background",
-			"Open selected story in new buffer background", function (I) {
-			  cefm_find_story_link(I, load_url_in_new_buffer_background);
-			});
+			      "Open selected story in new buffer background", function (I) {
+			        cefm_find_story_link(I, load_url_in_new_buffer_background);
+			      });
 
 interactive("cefm-scroll-up-current-conversation",
-			"Scroll the current conversation up", function(I){
-			  cefm_scroll_current_conversation_up(I);
-			});
+			      "Scroll the current conversation up", function(I){
+			        cefm_scroll_current_conversation_up(I);
+			      });
 
 interactive("cefm-scroll-down-current-conversation",
-			"Scroll the current conversation down", function(I){
-			  cefm_scroll_current_conversation_down(I);
-			});
+			      "Scroll the current conversation down", function(I){
+			        cefm_scroll_current_conversation_down(I);
+			      });
 
 interactive("cefm-cycle-conversations",
-			"Cycle through chat conversations", function(I){
-			  cefm_cycle_through_conversations(I);
-			});
+			      "Cycle through chat conversations", function(I){
+			        cefm_cycle_through_conversations(I);
+			      });
 
 interactive("cefm-expand-content",
-			"Expand the content of the selected story or the caption of the current photo", function(I){
-			  cefm_expand_story(I);
-			});
+			      "Expand the content of the selected story or the caption of the current photo", function(I){
+			        cefm_expand_story(I);
+			      });
 
 interactive("cefm-follow-notifications", "Follow notification links", function(I){
   if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
-	cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
+	  cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
   var element = yield read_browser_object(I);
   try {
     element = load_spec(element);
@@ -447,7 +450,7 @@ interactive("cefm-follow-notifications", "Follow notification links", function(I
 
 interactive("cefm-follow-notifications-new-buffer", "Follow notification links in new buffer", function(I){
   if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
-	cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
+	  cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
   var element = yield read_browser_object(I);
   try {
     element = load_spec(element);
@@ -458,21 +461,21 @@ interactive("cefm-follow-notifications-new-buffer", "Follow notification links i
 }, $browser_object = browser_object_facebook_notification_links);
 
 interactive("cefm-follow-notifications-new-buffer-background",
-			"Follow notification links in new buffer background", function(I){
-			  if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
-				cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
-			  var element = yield read_browser_object(I);
-			  try {
-				element = load_spec(element);
-				if (I.forced_charset)
-				  element.forced_charset = I.forced_charset;
-			  } catch (e) {}
-			  browser_object_follow(I.buffer, OPEN_NEW_BUFFER_BACKGROUND, element);
-			}, $browser_object = browser_object_facebook_notification_links);
+			      "Follow notification links in new buffer background", function(I){
+			        if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
+				        cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
+			        var element = yield read_browser_object(I);
+			        try {
+				        element = load_spec(element);
+				        if (I.forced_charset)
+				          element.forced_charset = I.forced_charset;
+			        } catch (e) {}
+			        browser_object_follow(I.buffer, OPEN_NEW_BUFFER_BACKGROUND, element);
+			      }, $browser_object = browser_object_facebook_notification_links);
 
 interactive("cefm-follow-messages", "Follow messages conversation", function(I){
   if(!cefm_is_jewel_panel_open("fbMessagesFlyout", I))
-	cefm_click_button("#fbMessagesJewel>a.jewelButton", "Messages", I);
+	  cefm_click_button("#fbMessagesJewel>a.jewelButton", "Messages", I);
   var element = yield read_browser_object(I);
   try {
     element = load_spec(element);
@@ -483,14 +486,14 @@ interactive("cefm-follow-messages", "Follow messages conversation", function(I){
 }, $browser_object = browser_object_facebook_messages_links);
 
 interactive("cefm-follow-multiple-notifications", "",
-		   function(I){
-			 var a = yield I.minibuffer.read($prompt = "Number of notifications to open: ");
-			 if(isNaN(a)){
-			   I.minibuffer.message("Please input a number!");
-			 } else {
-			   a = parseInt(a);
-			   
-			 }
-		   });
+		        function(I){
+			        var a = yield I.minibuffer.read($prompt = "Number of notifications to open: ");
+			        if(isNaN(a)){
+			          I.minibuffer.message("Please input a number!");
+			        } else {
+			          a = parseInt(a);
+			          
+			        }
+		        });
 
 provide("conkeror-extended-facebook-mode");
