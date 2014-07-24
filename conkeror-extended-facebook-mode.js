@@ -390,17 +390,22 @@ interactive("cefm-open-friend-request",
 
 interactive("cefm-open-messages",
 			      "Open Facebook Messages panel", function(I){
-			        cefm_click_button("#fbMessagesJewel>a.jewelButton", "Messages", I);
+			        cefm_click_button("._1z4y>.jewelButton", "Messages", I);
 			      });
 
 interactive("cefm-open-notification",
 			      "Open Facebook Notification panel", function(I){
-			        cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
+			        cefm_click_button("._4xi2>.jewelButton", "Notification", I);
 			      });
 
 interactive("cefm-open-home",
 			      "Open Facebook Home page", function(I){
-			        cefm_click_button("#navHome>a", "Home", I);
+			        cefm_click_button("._2pdh>._1ayn", "Home", I);
+			      });
+
+interactive("cefm-open-profile",
+			      "Open Facebook Profile page", function(I){
+			        cefm_click_button("._4fn6>._1ayn", "Profile", I);
 			      });
 
 interactive("cefm-quick-logout",
