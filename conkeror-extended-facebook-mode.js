@@ -171,6 +171,41 @@ function cefm_cycle_through_conversations(I){
 }
 
 /**
+ * Attach Image to the current conversation
+ * @param I - The I object of the interactive command
+ */
+function cefm_attach_image_to_conversation(I){
+  // get the document buffer
+  var document = I.buffer.document;
+
+  // query the div(s) that contain the chat conversations and the textareas for
+  // typing chat message
+  var conversationDiv;
+  var conversationTextareas = cefm_find_conversation_textarea_array(document);
+
+  // check if there are any active conversations
+  if((conversationDiv = cefm_find_conversation_div_array(document)) != null){
+	  // check if the focus is on any conversation or not
+	  if(cefm_is_focus_on_conversation(document)){
+	    // find the conversation div that is nth-level parent of the active
+	    // element
+	    var p;
+	    if((p = cefm_find_conversation_div(document)) == null){
+		    I.minibuffer.message(cefm_conversation_not_found_message);
+	    } else {
+		    // query the div that is the button to open file selector
+		    var select_file_div = p.querySelector("._5f0v");
+        dom_node_click(select_file_div);
+	    }
+	  } else {
+	    I.minibuffer.message(cefm_no_focused_conversation_message);
+	  }
+  } else {
+	  I.minibuffer.message(cefm_no_active_conversation_message);
+  }  
+}
+
+/**
  * Scroll current chat conversation
  * @param I - The I object of the interactive command
  * @param scroll_gap - The gap to scroll (positive for down, negative for scroll up)
@@ -431,6 +466,11 @@ interactive("cefm-scroll-up-current-conversation",
 interactive("cefm-scroll-down-current-conversation",
 			      "Scroll the current conversation down", function(I){
 			        cefm_scroll_current_conversation_down(I);
+			      });
+
+interactive("cefm-attach-image",
+			      "Open selected story in new buffer", function (I) {
+			        cefm_attach_image_to_conversation(I);
 			      });
 
 interactive("cefm-cycle-conversations",
