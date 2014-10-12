@@ -377,14 +377,14 @@ cefm.expandStory = function (I){
 
 // check if the fbJewel panel (Friend Requests, Messages, Notifications,...) is
 // currently closed or opened
-// panelId: the id of the panel div tag (usually "fbMessagesFlyout",
-// "fbNotificationsFlyout", "fbRequestsFlyout")
+// panelSelector: the selector of the panel div tag (usually "#fbMessagesFlyout",
+// "#fbNotificationsFlyout", "#fbRequestsFlyout")
 // I: the I object of the interactive command
-function cefm_is_jewel_panel_open(panelId, I){
+cefm.isJewelPanelOpen = function (I, panelSelector){
   var doc = I.buffer.document;
 
-  var element = doc.querySelector("#" + panelId);
-  if(element == null){
+  var element = doc.querySelector(panelSelector);
+  if(element === null){
 	  return false;
   } else {
 	  if(element.classList.contains("toggleTargetClosed")){
@@ -393,7 +393,7 @@ function cefm_is_jewel_panel_open(panelId, I){
 	    return true;
 	  }
   }
-}
+};
 
 // browser object classes link for notification, friend requests and messages
 define_browser_object_class("facebook-notification-links", null,
@@ -472,7 +472,7 @@ interactive("cefm-expand-content",
 			      });
 
 interactive("cefm-follow-notifications", "Follow notification links", function(I){
-  if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
+  if(!cefm.isJewelPanelOpen(I, "#fbNotificationsFlyout"))
 	  cefm.clickButton(I, "#fbNotificationsJewel>a.jewelButton", "Notification");
   var element = yield read_browser_object(I);
   try {
@@ -484,7 +484,7 @@ interactive("cefm-follow-notifications", "Follow notification links", function(I
 }, $browser_object = browser_object_facebook_notification_links);
 
 interactive("cefm-follow-notifications-new-buffer", "Follow notification links in new buffer", function(I){
-  if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
+  if(!cefm.isJewelPanelOpen(I, "#fbNotificationsFlyout"))
 	  cefm.clickButton(I, "#fbNotificationsJewel>a.jewelButton", "Notification");
   var element = yield read_browser_object(I);
   try {
@@ -497,7 +497,7 @@ interactive("cefm-follow-notifications-new-buffer", "Follow notification links i
 
 interactive("cefm-follow-notifications-new-buffer-background",
 			      "Follow notification links in new buffer background", function(I){
-			        if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
+			        if(!cefm.isJewelPanelOpen(I, "#fbNotificationsFlyout"))
 				        cefm.clickButton(I, "#fbNotificationsJewel>a.jewelButton", "Notification");
 			        var element = yield read_browser_object(I);
 			        try {
@@ -509,7 +509,7 @@ interactive("cefm-follow-notifications-new-buffer-background",
 			      }, $browser_object = browser_object_facebook_notification_links);
 
 interactive("cefm-follow-messages", "Follow messages conversation", function(I){
-  if(!cefm_is_jewel_panel_open("fbMessagesFlyout", I))
+  if(!cefm.isJewelPanelOpen(I, "#fbMessagesFlyout"))
 	  cefm.clickButton(I, "#fbMessagesJewel>a.jewelButton", "Messages");
   var element = yield read_browser_object(I);
   try {
