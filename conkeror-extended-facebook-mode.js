@@ -243,6 +243,7 @@ cefm.attachImageToConversation = function(I){
   if(focusedConversation === null) {
     I.minibuffer.message(cefm.messages.noFocusedConversation);
   } else {
+    // find the select image button and click on it
     var selectImageButton = focusedConversation.querySelector(cefm.selectors.selectImageButton);
     if(selectImageButton === null) {
       I.minibuffer.message(cefm.messages.selectImageButtonNotFound);
