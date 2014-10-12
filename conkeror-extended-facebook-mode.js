@@ -42,6 +42,9 @@ cefm.selectors.profileButton = "._4fn6>._1ayn";
 cefm.selectors.logoutButton = "#logout_form>label>input";
 // Messages
 cefm.selectors.focusedConversation = '.fbNub._50mz._50-v.focusedTab';
+// Chat conversation
+cefm.selectors.openedConversation = '.fbNub._50mz._50-v.opened';
+cefm.selectors.conversationTextarea = '._552m';
 
 // Regex
 cefm.regex = {};
@@ -188,7 +191,7 @@ cefm.cycleConversations = function(I) {
   var document = I.buffer.document;
 
   // get all the opened conversation divs
-  var conversationDivs = document.querySelectorAll('.fbNub._50mz._50-v.opened');
+  var conversationDivs = document.querySelectorAll(cefm.selectors.openedConversation);
 
   // if no active conversation
   if(conversationDivs.length === 0) {
@@ -218,7 +221,7 @@ cefm.cycleConversations = function(I) {
   }
 
   function focusTextarea(conversationDiv) {
-    var textarea = conversationDiv.querySelector('._552m');
+    var textarea = conversationDiv.querySelector(cefm.selectors.conversationTextarea);
     textarea.focus();
   }
 };
