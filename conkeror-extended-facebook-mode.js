@@ -28,6 +28,11 @@ define_key(facebook_keymap, "o", null, $fallthrough);
 cefm.selectors = {};
 // Selected story
 cefm.selectors.selectedStory = [".selectedStorySimple", "._5gxh", "._5qdv"];
+// Story links
+cefm.selectors.storyLink = [
+  "a._5pcq", ".uiStreamSource>a", ".UFIBlingBox.uiBlingBox.feedbackBling",
+  ".fcg>a", ".fwb a"
+];
 
 // Regex
 cefm.regex = {};
@@ -295,36 +300,22 @@ cefm.findSelectedStory = function (I){
  * @param I - The I object of the interactive command
  * @param open_url_func - The function for opening the url
  */
-function cefm_find_story_link(I, open_url_func){
+cefm.openSelectedStoryLink = function (I, open_url_func){
   // get the document
   var document = I.buffer.document;
-  var story_link_array = new Array();
+  var story_link_array = [];
   var selected_story = cefm.findSelectedStory(I);
 
   // check if the selected story exists
 
   if(selected_story != null){
-  	// query all the possible potential links inside the selectedStory
-  	var temp;
-  	var tempArray;
-  	temp = selected_story.querySelector("a._5pcq");
-  	story_link_array.push(temp);
-	  temp = selected_story.querySelector(".uiStreamSource>a");
-	  story_link_array.push(temp);
-    temp = selected_story.querySelector(".UFIBlingBox.uiBlingBox.feedbackBling");
-    story_link_array.push(temp);
-  	tempArray = selected_story.querySelectorAll(".fcg>a");
-  	for(i=0; i<tempArray.length; i++){
-  	  story_link_array.push(tempArray[i]);
-  	}
-  	tempArray = selected_story.querySelectorAll(".fwb");
-  	for(i=0; i<tempArray.length; i++){
-  	  var tempArray2 = tempArray[i].querySelectorAll("a");
-  	  for(var j=0; j<tempArray2.length; j++){
-  		  story_link_array.push(tempArray2[j]);
-  	  }
-  	}
-
+    cefm.selectors.storyLink.forEach(function(selector){
+      var links = selected_story.querySelectorAll(selector);
+      for(var i = 0; i < links.length; i++) {
+        story_link_array.push(links[0]);
+      }
+    });
+    
   	// the regex array
   	var regex_array = cefm.regex.storyLink;
 
@@ -351,7 +342,7 @@ function cefm_find_story_link(I, open_url_func){
   } else {
   	I.minibuffer.message("No selected story");
   }
-}
+};
 
 /**
  * Expand the content of the selected story if exists, otherwise, expand the
@@ -442,12 +433,12 @@ interactive("cefm-quick-logout",
 
 interactive("cefm-open-current-story-new-buffer",
 			      "Open selected story in new buffer", function (I) {
-			        cefm_find_story_link(I, load_url_in_new_buffer);
+			        cefm.openSelectedStoryLink(I, load_url_in_new_buffer);
 			      });
 
 interactive("cefm-open-current-story-new-buffer-background",
 			      "Open selected story in new buffer background", function (I) {
-			        cefm_find_story_link(I, load_url_in_new_buffer_background);
+			        cefm.openSelectedStoryLink(I, load_url_in_new_buffer_background);
 			      });
 
 interactive("cefm-scroll-up-current-conversation",
