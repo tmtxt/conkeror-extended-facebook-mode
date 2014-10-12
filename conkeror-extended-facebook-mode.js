@@ -40,6 +40,8 @@ cefm.selectors.notificationButton = "._4xi2>.jewelButton";
 cefm.selectors.homeButton = "._2pdh>._1ayn";
 cefm.selectors.profileButton = "._4fn6>._1ayn";
 cefm.selectors.logoutButton = "#logout_form>label>input";
+// Messages
+cefm.selectors.focusedConversation = '.fbNub._50mz._50-v.focusedTab';
 
 // Regex
 cefm.regex = {};
@@ -110,8 +112,9 @@ cefm.clickButton = function (I, selector, buttonName){
  * @param document - The document object of the current buffer (I.buffer.document)
  */
 cefm.isFocusOnConversation = function (I){
-  var activeElement = I.buffer.document.activeElement;
-  if(activeElement.classList.contains("_552m")){
+  var document = I.buffer.document;
+  var activeConversation = document.querySelector(cefm.selectors.focusedConversation);
+  if(activeConversation !== null){
 	  return true;
   } else {
 	  return false;
