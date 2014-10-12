@@ -84,7 +84,6 @@ var cefm_no_active_conversation_message
   = "No active conversations. Press q to find a friend to chat.";
 var cefm_no_focused_conversation_message
   = "No focused conversation. Focus on one conversation first";
-var cefm_scroll_gap = 50;
 
 // Button Names
 cefm.buttonNames = {};
@@ -94,6 +93,9 @@ cefm.buttonNames.notification = "Notification";
 cefm.buttonNames.home = "Home";
 cefm.buttonNames.profile = "Profile";
 cefm.buttonNames.logout = "Logout";
+
+// Scroll
+cefm.scrollGap = 50; // scroll gap measured in pixel
 
 ////////////////////////////////////////////////////////////////////////////////
 // Some functions needed for the mode
@@ -256,7 +258,7 @@ cefm.attachImageToConversation = function(I){
 /**
  * Scroll current chat conversation
  * @param I - The I object of the interactive command
- * @param scroll_gap - The gap to scroll (positive for down, negative for scroll up)
+ * @param scrollGap - The gap to scroll (positive for down, negative for scroll up)
  */
 cefm.scrollCurrentConversation = function(I, scrollGap) {
   var document = I.buffer.document;
@@ -273,53 +275,21 @@ cefm.scrollCurrentConversation = function(I, scrollGap) {
   }
 };
 
-function cefm_scroll_current_conversation(I, scroll_gap){
-  // get the document buffer
-  var document = I.buffer.document;
-
-  // query the div(s) that contain the chat conversations and the textareas for
-  // typing chat message
-  var conversationDiv;
-  var conversationTextareas = cefm_find_conversation_textarea_array(document);
-
-  // check if there are any active conversations
-  if((conversationDiv = cefm_find_conversation_div_array(document)) != null){
-	  // check if the focus is on any conversation or not
-	  if(cefm.isFocusOnConversation(I)){
-	    // find the conversation div that is nth-level parent of the active
-	    // element
-	    var p;
-	    if((p = cefm_find_conversation_div(document)) == null){
-		    I.minibuffer.message(cefm_conversation_not_found_message);
-	    } else {
-		    // query the body of the chat (the scrollable part)
-		    var chat_body = p.querySelector(".fbNubFlyoutBody");
-		    // scroll to top
-		    chat_body.scrollTop = chat_body.scrollTop + scroll_gap;
-	    }
-	  } else {
-	    I.minibuffer.message(cefm_no_focused_conversation_message);
-	  }
-  } else {
-	  I.minibuffer.message(cefm_no_active_conversation_message);
-  }  
-}
-
 /**
  * Scroll current chat conversation up
  * @param I - The I object of the interactive command
  */
-function cefm_scroll_current_conversation_up(I){
-  cefm.scrollCurrentConversation(I, 0 - cefm_scroll_gap);
-}
+cefm.scrollCurrentConversationUp = function (I){
+  cefm.scrollCurrentConversation(I, 0 - cefm.scrollGap);
+};
 
 /**
  * Scroll current chat conversation down
  * @param I - The I object of the interactive command
  */
-function cefm_scroll_current_conversation_down(I){
-  cefm.scrollCurrentConversation(I, cefm_scroll_gap);
-}
+cefm.scrollCurrentConversationDown = function (I){
+  cefm.scrollCurrentConversation(I, cefm.scrollGap);
+};
 
 /**
  * Find the selected story
@@ -485,12 +455,12 @@ interactive("cefm-open-current-story-new-buffer-background",
 
 interactive("cefm-scroll-up-current-conversation",
 			      "Scroll the current conversation up", function(I){
-			        cefm_scroll_current_conversation_up(I);
+			        cefm.scrollCurrentConversationUp(I);
 			      });
 
 interactive("cefm-scroll-down-current-conversation",
 			      "Scroll the current conversation down", function(I){
-			        cefm_scroll_current_conversation_down(I);
+			        cefm.scrollCurrentConversationDown(I);
 			      });
 
 interactive("cefm-attach-image",
