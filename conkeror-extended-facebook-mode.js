@@ -55,8 +55,8 @@ cefm.click_button = function (I, selector, buttonName){
  * Check if the focus is on any conversations or not
  * @param document - The document object of the current buffer (I.buffer.document)
  */
-cefm.is_focus_on_conversation = function (document){
-  var activeElement = document.activeElement;
+cefm.is_focus_on_conversation = function (I){
+  var activeElement = I.buffer.document.activeElement;
   if(activeElement.classList.contains("_552m")){
 	  return true;
   } else {
@@ -128,7 +128,7 @@ function cefm_cycle_through_conversations(I){
   // check if there are any active conversations
   if((conversationDiv = cefm_find_conversation_div_array(document)) != null){
 	  // check if the focus is on any conversation or not
-	  if(cefm_is_focus_on_conversation(document)){
+	  if(cefm.is_focus_on_conversation(I)){
 	    // find the conversation div that is nth-level parent of the active
 	    // element
 	    var p;
@@ -174,7 +174,7 @@ function cefm_attach_image_to_conversation(I){
   // check if there are any active conversations
   if((conversationDiv = cefm_find_conversation_div_array(document)) != null){
 	  // check if the focus is on any conversation or not
-	  if(cefm_is_focus_on_conversation(document)){
+	  if(cefm.is_focus_on_conversation(I)){
 	    // find the conversation div that is nth-level parent of the active
 	    // element
 	    var p;
@@ -210,7 +210,7 @@ function cefm_scroll_current_conversation(I, scroll_gap){
   // check if there are any active conversations
   if((conversationDiv = cefm_find_conversation_div_array(document)) != null){
 	  // check if the focus is on any conversation or not
-	  if(cefm_is_focus_on_conversation(document)){
+	  if(cefm.is_focus_on_conversation(I)){
 	    // find the conversation div that is nth-level parent of the active
 	    // element
 	    var p;
