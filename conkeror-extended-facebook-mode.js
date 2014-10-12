@@ -40,7 +40,7 @@ var cefm_scroll_gap = 50;
  * @param button_name - The name of the button, can be any name that you like
  * @param I - The I object of the interactive command
  */
-cefm.click_button = function (I, selector, buttonName){
+cefm.clickButton = function (I, selector, buttonName){
   var document = I.buffer.document;
   var button = document.querySelector(selector);
   if (button !== null) {
@@ -55,7 +55,7 @@ cefm.click_button = function (I, selector, buttonName){
  * Check if the focus is on any conversations or not
  * @param document - The document object of the current buffer (I.buffer.document)
  */
-cefm.is_focus_on_conversation = function (I){
+cefm.isFocusOnConversation = function (I){
   var activeElement = I.buffer.document.activeElement;
   if(activeElement.classList.contains("_552m")){
 	  return true;
@@ -128,7 +128,7 @@ function cefm_cycle_through_conversations(I){
   // check if there are any active conversations
   if((conversationDiv = cefm_find_conversation_div_array(document)) != null){
 	  // check if the focus is on any conversation or not
-	  if(cefm.is_focus_on_conversation(I)){
+	  if(cefm.isFocusOnConversation(I)){
 	    // find the conversation div that is nth-level parent of the active
 	    // element
 	    var p;
@@ -174,7 +174,7 @@ function cefm_attach_image_to_conversation(I){
   // check if there are any active conversations
   if((conversationDiv = cefm_find_conversation_div_array(document)) != null){
 	  // check if the focus is on any conversation or not
-	  if(cefm.is_focus_on_conversation(I)){
+	  if(cefm.isFocusOnConversation(I)){
 	    // find the conversation div that is nth-level parent of the active
 	    // element
 	    var p;
@@ -210,7 +210,7 @@ function cefm_scroll_current_conversation(I, scroll_gap){
   // check if there are any active conversations
   if((conversationDiv = cefm_find_conversation_div_array(document)) != null){
 	  // check if the focus is on any conversation or not
-	  if(cefm.is_focus_on_conversation(I)){
+	  if(cefm.isFocusOnConversation(I)){
 	    // find the conversation div that is nth-level parent of the active
 	    // element
 	    var p;
@@ -408,32 +408,32 @@ define_browser_object_class("facebook-messages-links", null,
 // Interactive Commands
 interactive("cefm-open-friend-request",
 			      "Open Facebook Friend Requests panel", function(I){
-			        cefm.click_button(I, "#fbRequestsJewel>a.jewelButton", "Friend Request");
+			        cefm.clickButton(I, "#fbRequestsJewel>a.jewelButton", "Friend Request");
 			      });
 
 interactive("cefm-open-messages",
 			      "Open Facebook Messages panel", function(I){
-			        cefm.click_button(I, "._1z4y>.jewelButton", "Messages");
+			        cefm.clickButton(I, "._1z4y>.jewelButton", "Messages");
 			      });
 
 interactive("cefm-open-notification",
 			      "Open Facebook Notification panel", function(I){
-			        cefm.click_button(I, "._4xi2>.jewelButton", "Notification");
+			        cefm.clickButton(I, "._4xi2>.jewelButton", "Notification");
 			      });
 
 interactive("cefm-open-home",
 			      "Open Facebook Home page", function(I){
-			        cefm.click_button(I, "._2pdh>._1ayn", "Home");
+			        cefm.clickButton(I, "._2pdh>._1ayn", "Home");
 			      });
 
 interactive("cefm-open-profile",
 			      "Open Facebook Profile page", function(I){
-			        cefm.click_button(I, "._4fn6>._1ayn", "Profile");
+			        cefm.clickButton(I, "._4fn6>._1ayn", "Profile");
 			      });
 
 interactive("cefm-quick-logout",
 			      "Quickly logout from Facebook", function(I){
-			        cefm.click_button(I, "#logout_form>label>input", "Logout");
+			        cefm.clickButton(I, "#logout_form>label>input", "Logout");
 			      });
 
 interactive("cefm-open-current-story-new-buffer",
@@ -473,7 +473,7 @@ interactive("cefm-expand-content",
 
 interactive("cefm-follow-notifications", "Follow notification links", function(I){
   if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
-	  cefm.click_button(I, "#fbNotificationsJewel>a.jewelButton", "Notification");
+	  cefm.clickButton(I, "#fbNotificationsJewel>a.jewelButton", "Notification");
   var element = yield read_browser_object(I);
   try {
     element = load_spec(element);
@@ -485,7 +485,7 @@ interactive("cefm-follow-notifications", "Follow notification links", function(I
 
 interactive("cefm-follow-notifications-new-buffer", "Follow notification links in new buffer", function(I){
   if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
-	  cefm.click_button(I, "#fbNotificationsJewel>a.jewelButton", "Notification");
+	  cefm.clickButton(I, "#fbNotificationsJewel>a.jewelButton", "Notification");
   var element = yield read_browser_object(I);
   try {
     element = load_spec(element);
@@ -498,7 +498,7 @@ interactive("cefm-follow-notifications-new-buffer", "Follow notification links i
 interactive("cefm-follow-notifications-new-buffer-background",
 			      "Follow notification links in new buffer background", function(I){
 			        if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
-				        cefm.click_button(I, "#fbNotificationsJewel>a.jewelButton", "Notification");
+				        cefm.clickButton(I, "#fbNotificationsJewel>a.jewelButton", "Notification");
 			        var element = yield read_browser_object(I);
 			        try {
 				        element = load_spec(element);
@@ -510,7 +510,7 @@ interactive("cefm-follow-notifications-new-buffer-background",
 
 interactive("cefm-follow-messages", "Follow messages conversation", function(I){
   if(!cefm_is_jewel_panel_open("fbMessagesFlyout", I))
-	  cefm.click_button(I, "#fbMessagesJewel>a.jewelButton", "Messages");
+	  cefm.clickButton(I, "#fbMessagesJewel>a.jewelButton", "Messages");
   var element = yield read_browser_object(I);
   try {
     element = load_spec(element);
