@@ -256,7 +256,8 @@ function cefm_scroll_current_conversation_down(I){
  * @param document - The document object of the current buffer (I.buffer.document)
  * @return Returns the selected story div object if found, otherwise, returns null
  */
-cefm.findSelectedStory = function (document){
+cefm.findSelectedStory = function (I){
+  var document = I.buffer.document;
   var selectedStory = null;
   var selectedStorySelectors = cefm.selectors.selectedStory;
   selectedStorySelectors.forEach(function(selector){
@@ -276,7 +277,7 @@ function cefm_find_story_link(I, open_url_func){
   // get the document
   var document = I.buffer.document;
   var story_link_array = new Array();
-  var selected_story = cefm.findSelectedStory(document);
+  var selected_story = cefm.findSelectedStory(I);
 
   // check if the selected story exists
 
@@ -367,7 +368,7 @@ function cefm_expand_story(I){
   var expandElement = null;
 
   // check if the selected story exists
-  if((selectedStory = cefm.findSelectedStory(document)) != null){
+  if((selectedStory = cefm.findSelectedStory(I)) != null){
 	  expandParent = selectedStory;
   } else {
 	  expandParent = document;
