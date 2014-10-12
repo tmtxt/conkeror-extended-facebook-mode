@@ -78,13 +78,6 @@ cefm.messages.noActiveConversation = 'No conversation opened. Press q to start c
 cefm.messages.noFocusedConversation = "No focused conversation. Focus on one conversation first";
 cefm.messages.selectImageButtonNotFound = "Cannot find Select Image button";
 
-var cefm_conversation_not_found_message
-  = "Cannot find conversation div";
-var cefm_no_active_conversation_message
-  = "No active conversations. Press q to find a friend to chat.";
-var cefm_no_focused_conversation_message
-  = "No focused conversation. Focus on one conversation first";
-
 // Button Names
 cefm.buttonNames = {};
 cefm.buttonNames.friendRequest = "Friend Request";
@@ -135,54 +128,6 @@ cefm.findFocusedConversation = function(I) {
   var focusedConversation = document.querySelector(cefm.selectors.focusedConversation);
   return focusedConversation;
 };
-
-/**
- * Finding the conversation <div> that is nth-level parent of the active element
- * @param document - The document object of the current buffer (I.buffer.document)
- * @return Returns the conversation <div> object if it's found, otherwise, returns null
- */
-function cefm_find_conversation_div(document){
-  var activeElement = document.activeElement;
-  // find the conversation div that is nth-level parent of the active element
-  var p = activeElement.parentNode;
-  while(p!=document){
-	  if(p.classList.contains("_50-v")
-	     && p.classList.contains("fbNub")
-	     && p.classList.contains("_50mz")){
-	    break;
-	  } else {
-	    p = p.parentNode;
-	  }
-  }
-  // check if it can find
-  if(p == document){
-	  return null;
-  } else {
-	  return p;
-  }
-}
-
-/**
- * Find the conversation <div> arrays (all the conversation <div> inside the page)
- * @param document - The document object of the current buffer (I.buffer.document)
- * @return Returns the conversation <div> array there are any conversation <div> exists, otherwise, returns null
- */
-function cefm_find_conversation_div_array(document){
-  var conversationDiv = document.querySelectorAll("._50-v.fbNub._50mz");
-  if(conversationDiv.length == 0){
-	  return null;
-  } else {
-	  return conversationDiv;
-  }
-}
-
-/**
- * Find the <textarea> array that contains all the <textarea>s inside the conversation <div>
- * @param document - The document object of the current buffer (I.buffer.document)
- */
-function cefm_find_conversation_textarea_array(document){
-  return document.querySelectorAll("._552m");
-}
 
 /**
  * Cycle through conversations
