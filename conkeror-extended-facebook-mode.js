@@ -46,6 +46,7 @@ cefm.selectors.focusedConversation = '.fbNub._50mz._50-v.focusedTab';
 cefm.selectors.openedConversation = '.fbNub._50mz._50-v.opened';
 cefm.selectors.conversationTextarea = '._552m';
 cefm.selectors.selectImageButton = "._5f0v";
+cefm.selectors.conversationBody = '.fbNubFlyoutBody.scrollable';
 
 // Regex
 cefm.regex = {};
@@ -94,8 +95,9 @@ cefm.scrollGap = 50; // scroll gap measured in pixel
 // Some functions needed for the mode
 /**
  * Click on the button with the input css selector
+ *
  * @param selector - The css selector of the button
- * @param button_name - The name of the button, can be any name that you like
+ * @param buttonName - The name of the button, can be any name that you like
  * @param I - The I object of the interactive command
  */
 cefm.clickButton = function (I, selector, buttonName){
@@ -111,7 +113,8 @@ cefm.clickButton = function (I, selector, buttonName){
 
 /**
  * Check if the focus is on any conversations or not
- * @param document - The document object of the current buffer (I.buffer.document)
+ *
+ * @param I - The I object of the interactive command
  */
 cefm.isFocusOnConversation = function (I){
   var document = I.buffer.document;
@@ -123,6 +126,11 @@ cefm.isFocusOnConversation = function (I){
   }
 };
 
+/**
+ * Find the conversation div that is currently being focused
+ *
+ * @param I - The I object of the interactive command
+ */
 cefm.findFocusedConversation = function(I) {
   var document = I.buffer.document;
   var focusedConversation = document.querySelector(cefm.selectors.focusedConversation);
@@ -136,6 +144,7 @@ cefm.findFocusedConversation = function(I) {
  * if not focus on any conversation, focus on the first one
  * otherwise, focus on the next one, if this is the last one, focus back on
  * the first one
+ *
  * @param I - The I object of the interactive command
  */
 cefm.cycleConversations = function(I) {
@@ -179,6 +188,7 @@ cefm.cycleConversations = function(I) {
 
 /**
  * Attach Image to the current conversation
+ *
  * @param I - The I object of the interactive command
  */
 cefm.attachImageToConversation = function(I){
@@ -202,6 +212,7 @@ cefm.attachImageToConversation = function(I){
 
 /**
  * Scroll current chat conversation
+ *
  * @param I - The I object of the interactive command
  * @param scrollGap - The gap to scroll (positive for down, negative for scroll up)
  */
@@ -215,13 +226,14 @@ cefm.scrollCurrentConversation = function(I, scrollGap) {
     I.minibuffer.message(cefm.messages.noFocusedConversation);
   } else {
     // get the div that displays the chat content and scroll
-    var chatBody = focusedConversation.querySelector('.fbNubFlyoutBody.scrollable');
+    var chatBody = focusedConversation.querySelector(cefm.selectors.conversationBody);
     chatBody.scrollTop = chatBody.scrollTop + scrollGap;
   }
 };
 
 /**
  * Scroll current chat conversation up
+ *
  * @param I - The I object of the interactive command
  */
 cefm.scrollCurrentConversationUp = function (I){
@@ -230,6 +242,7 @@ cefm.scrollCurrentConversationUp = function (I){
 
 /**
  * Scroll current chat conversation down
+ *
  * @param I - The I object of the interactive command
  */
 cefm.scrollCurrentConversationDown = function (I){
@@ -238,7 +251,8 @@ cefm.scrollCurrentConversationDown = function (I){
 
 /**
  * Find the selected story
- * @param document - The document object of the current buffer (I.buffer.document)
+ *
+ * @param I - The I object of the interactive command
  * @return Returns the selected story div object if found, otherwise, returns null
  */
 cefm.findSelectedStory = function (I){
@@ -255,8 +269,9 @@ cefm.findSelectedStory = function (I){
 
 /**
  * Inspect and find the link of selected story
+ *
  * @param I - The I object of the interactive command
- * @param open_url_func - The function for opening the url
+ * @param openUrlFunction - The function for opening the url
  */
 cefm.openSelectedStoryLink = function (I, openUrlFunction){
   // get the document
@@ -303,7 +318,8 @@ cefm.openSelectedStoryLink = function (I, openUrlFunction){
 
 /**
  * Expand the content of the selected story if exists, otherwise, expand the
- * first one found 
+ * first one found
+ *
  * @param I - The I object of the interactive command
  */
 cefm.expandStory = function (I){
@@ -327,11 +343,14 @@ cefm.expandStory = function (I){
   }
 };
 
-// check if the fbJewel panel (Friend Requests, Messages, Notifications,...) is
-// currently closed or opened
-// panelSelector: the selector of the panel div tag (usually "#fbMessagesFlyout",
-// "#fbNotificationsFlyout", "#fbRequestsFlyout")
-// I: the I object of the interactive command
+/**
+ * check if the fbJewel panel (Friend Requests, Messages, Notifications,...) is
+ * currently closed or opened
+ * panelSelector: the selector of the panel div tag
+ * (usually "#fbMessagesFlyout", "#fbNotificationsFlyout", "#fbRequestsFlyout")
+ * 
+ * @param I - The I object of the interactive command
+ */
 cefm.isJewelPanelOpen = function (I, panelSelector){
   var doc = I.buffer.document;
 
@@ -347,6 +366,7 @@ cefm.isJewelPanelOpen = function (I, panelSelector){
   }
 };
 
+////////////////////////////////////////////////////////////////////////////////
 // browser object classes link for notification, friend requests and messages
 define_browser_object_class("facebook-notification-links", null,
 							              xpath_browser_object_handler("//a[@class='_33e']"),
