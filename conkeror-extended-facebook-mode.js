@@ -45,6 +45,7 @@ cefm.selectors.focusedConversation = '.fbNub._50mz._50-v.focusedTab';
 // Chat conversation
 cefm.selectors.openedConversation = '.fbNub._50mz._50-v.opened';
 cefm.selectors.conversationTextarea = '._552m';
+cefm.selectors.selectImageButton = "._5f0v";
 
 // Regex
 cefm.regex = {};
@@ -73,6 +74,9 @@ cefm.messages = {};
 cefm.messages.storyLinkNotFound = "Cannot find story link";
 cefm.messages.noSelectedStory = "No selected story. Press j k to traverse story";
 cefm.messages.expandElementNotFound = "Cannot find any expand element";
+cefm.messages.noActiveConversation = 'No conversation opened. Press q to start chatting';
+cefm.messages.noFocusedConversation = "No focused conversation. Focus on one conversation first";
+cefm.messages.selectImageButtonNotFound = "Cannot find Select Image button";
 
 var cefm_conversation_not_found_message
   = "Cannot find conversation div";
@@ -195,7 +199,7 @@ cefm.cycleConversations = function(I) {
 
   // if no active conversation
   if(conversationDivs.length === 0) {
-    I.minibuffer.message('No conversation opened. Press q to start chatting');
+    I.minibuffer.message(cefm.messages.noActiveConversation);
   } else {
     // if not focus on any conversation
     if(!cefm.isFocusOnConversation(I)) {
@@ -230,36 +234,23 @@ cefm.cycleConversations = function(I) {
  * Attach Image to the current conversation
  * @param I - The I object of the interactive command
  */
-function cefm_attach_image_to_conversation(I){
-  // get the document buffer
+cefm.attachImageToConversation = function(I){
   var document = I.buffer.document;
 
-  // query the div(s) that contain the chat conversations and the textareas for
-  // typing chat message
-  var conversationDiv;
-  var conversationTextareas = cefm_find_conversation_textarea_array(document);
+  // find the focused conversation
+  var focusedConversation = cefm.findFocusedConversation(I);
 
-  // check if there are any active conversations
-  if((conversationDiv = cefm_find_conversation_div_array(document)) != null){
-	  // check if the focus is on any conversation or not
-	  if(cefm.isFocusOnConversation(I)){
-	    // find the conversation div that is nth-level parent of the active
-	    // element
-	    var p;
-	    if((p = cefm_find_conversation_div(document)) == null){
-		    I.minibuffer.message(cefm_conversation_not_found_message);
-	    } else {
-		    // query the div that is the button to open file selector
-		    var select_file_div = p.querySelector("._5f0v");
-        dom_node_click(select_file_div);
-	    }
-	  } else {
-	    I.minibuffer.message(cefm_no_focused_conversation_message);
-	  }
+  if(focusedConversation === null) {
+    I.minibuffer.message(cefm.messages.noFocusedConversation);
   } else {
-	  I.minibuffer.message(cefm_no_active_conversation_message);
-  }  
-}
+    var selectImageButton = focusedConversation.querySelector(cefm.selectors.selectImageButton);
+    if(selectImageButton === null) {
+      I.minibuffer.message(cefm.messages.selectImageButtonNotFound);
+    } else {
+      dom_node_click(selectImageButton);
+    }
+  }
+};
 
 /**
  * Scroll current chat conversation
@@ -488,7 +479,7 @@ interactive("cefm-scroll-down-current-conversation",
 
 interactive("cefm-attach-image",
 			      "Open selected story in new buffer", function (I) {
-			        cefm_attach_image_to_conversation(I);
+			        cefm.attachImageToConversation(I);
 			      });
 
 interactive("cefm-cycle-conversations",
