@@ -258,6 +258,21 @@ cefm.attachImageToConversation = function(I){
  * @param I - The I object of the interactive command
  * @param scroll_gap - The gap to scroll (positive for down, negative for scroll up)
  */
+cefm.scrollCurrentConversation = function(I, scrollGap) {
+  var document = I.buffer.document;
+
+  // find the focused conversation
+  var focusedConversation = cefm.findFocusedConversation(I);
+
+  if(focusedConversation === null) {
+    I.minibuffer.message(cefm.messages.noFocusedConversation);
+  } else {
+    // get the div that displays the chat content and scroll
+    var chatBody = focusedConversation.querySelector('.fbNubFlyoutBody.scrollable');
+    chatBody.scrollTop = chatBody.scrollTop + scrollGap;
+  }
+};
+
 function cefm_scroll_current_conversation(I, scroll_gap){
   // get the document buffer
   var document = I.buffer.document;
@@ -295,7 +310,7 @@ function cefm_scroll_current_conversation(I, scroll_gap){
  * @param I - The I object of the interactive command
  */
 function cefm_scroll_current_conversation_up(I){
-  cefm_scroll_current_conversation(I, 0 - cefm_scroll_gap);
+  cefm.scrollCurrentConversation(I, 0 - cefm_scroll_gap);
 }
 
 /**
@@ -303,7 +318,7 @@ function cefm_scroll_current_conversation_up(I){
  * @param I - The I object of the interactive command
  */
 function cefm_scroll_current_conversation_down(I){
-  cefm_scroll_current_conversation(I, cefm_scroll_gap);
+  cefm.scrollCurrentConversation(I, cefm_scroll_gap);
 }
 
 /**
