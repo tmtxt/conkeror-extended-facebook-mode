@@ -33,6 +33,13 @@ cefm.selectors.storyLink = [
   "a._5pcq", ".uiStreamSource>a", ".UFIBlingBox.uiBlingBox.feedbackBling",
   ".fcg>a", ".fwb a"
 ];
+// Buttons
+cefm.selectors.friendRequestButton = "#fbRequestsJewel>a.jewelButton";
+cefm.selectors.messagesButton = "._1z4y>.jewelButton";
+cefm.selectors.notificationButton = "._4xi2>.jewelButton";
+cefm.selectors.homeButton = "._2pdh>._1ayn";
+cefm.selectors.profileButton = "._4fn6>._1ayn";
+cefm.selectors.logoutButton = "#logout_form>label>input";
 
 // Regex
 cefm.regex = {};
@@ -69,6 +76,15 @@ var cefm_no_active_conversation_message
 var cefm_no_focused_conversation_message
   = "No focused conversation. Focus on one conversation first";
 var cefm_scroll_gap = 50;
+
+// Button Names
+cefm.buttonNames = {};
+cefm.buttonNames.friendRequest = "Friend Request";
+cefm.buttonNames.messages = "Messages";
+cefm.buttonNames.notification = "Notification";
+cefm.buttonNames.home = "Home";
+cefm.buttonNames.profile = "Profile";
+cefm.buttonNames.logout = "Logout";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Some functions needed for the mode
@@ -408,32 +424,32 @@ define_browser_object_class("facebook-messages-links", null,
 // Interactive Commands
 interactive("cefm-open-friend-request",
 			      "Open Facebook Friend Requests panel", function(I){
-			        cefm.clickButton(I, "#fbRequestsJewel>a.jewelButton", "Friend Request");
+			        cefm.clickButton(I, cefm.selectors.friendRequestButton, cefm.buttonNames.friendRequest);
 			      });
 
 interactive("cefm-open-messages",
 			      "Open Facebook Messages panel", function(I){
-			        cefm.clickButton(I, "._1z4y>.jewelButton", "Messages");
+			        cefm.clickButton(I, cefm.selectors.messagesButton, cefm.buttonNames.messages);
 			      });
 
 interactive("cefm-open-notification",
 			      "Open Facebook Notification panel", function(I){
-			        cefm.clickButton(I, "._4xi2>.jewelButton", "Notification");
+			        cefm.clickButton(I, cefm.selectors.notificationButton, cefm.buttonNames.notification);
 			      });
 
 interactive("cefm-open-home",
 			      "Open Facebook Home page", function(I){
-			        cefm.clickButton(I, "._2pdh>._1ayn", "Home");
+			        cefm.clickButton(I, cefm.selectors.homeButton, cefm.buttonNames.home);
 			      });
 
 interactive("cefm-open-profile",
 			      "Open Facebook Profile page", function(I){
-			        cefm.clickButton(I, "._4fn6>._1ayn", "Profile");
+			        cefm.clickButton(I, cefm.selectors.profileButton, cefm.buttonNames.profile);
 			      });
 
 interactive("cefm-quick-logout",
 			      "Quickly logout from Facebook", function(I){
-			        cefm.clickButton(I, "#logout_form>label>input", "Logout");
+			        cefm.clickButton(I, cefm.selectors.logoutButton, cefm.buttonNames.logout);
 			      });
 
 interactive("cefm-open-current-story-new-buffer",
