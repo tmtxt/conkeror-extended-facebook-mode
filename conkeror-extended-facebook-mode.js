@@ -6,6 +6,9 @@
 // Include library
 require("facebook"); // the default Conkeror's Facebook mode
 
+// Avoid polluting global variables
+var cefm = {};
+
 ////////////////////////////////////////////////////////////////////////////////
 // Fallthrough keys for Facebook shortcut keys
 define_key(facebook_keymap, "j", null, $fallthrough);
@@ -17,6 +20,7 @@ define_key(facebook_keymap, "l", null, $fallthrough);
 define_key(facebook_keymap, "m", null, $fallthrough);
 define_key(facebook_keymap, "c", null, $fallthrough);
 define_key(facebook_keymap, "p", null, $fallthrough);
+define_key(facebook_keymap, "o", null, $fallthrough);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Variables used
@@ -36,15 +40,15 @@ var cefm_scroll_gap = 50;
  * @param button_name - The name of the button, can be any name that you like
  * @param I - The I object of the interactive command
  */
-function cefm_click_button(selector, button_name, I){
+cefm.click_button = function (I, selector, button_name){
   var document = I.buffer.document;
   var button = document.querySelector(selector);
-  if (button != null) {
+  if (button !== null) {
 	  dom_node_click(button);
   } else {
 	  I.minibuffer.message("Cannot find " + button_name + " button");
   }
-}
+};
 
 /**
  * Check if the focus is on any conversations or not
@@ -403,32 +407,32 @@ define_browser_object_class("facebook-messages-links", null,
 // Interactive Commands
 interactive("cefm-open-friend-request",
 			      "Open Facebook Friend Requests panel", function(I){
-			        cefm_click_button("#fbRequestsJewel>a.jewelButton", "Friend Request", I);
+			        cefm.click_button(I, "#fbRequestsJewel>a.jewelButton", "Friend Request");
 			      });
 
 interactive("cefm-open-messages",
 			      "Open Facebook Messages panel", function(I){
-			        cefm_click_button("._1z4y>.jewelButton", "Messages", I);
+			        cefm.click_button(I, "._1z4y>.jewelButton", "Messages");
 			      });
 
 interactive("cefm-open-notification",
 			      "Open Facebook Notification panel", function(I){
-			        cefm_click_button("._4xi2>.jewelButton", "Notification", I);
+			        cefm.click_button(I, "._4xi2>.jewelButton", "Notification");
 			      });
 
 interactive("cefm-open-home",
 			      "Open Facebook Home page", function(I){
-			        cefm_click_button("._2pdh>._1ayn", "Home", I);
+			        cefm.click_button(I, "._2pdh>._1ayn", "Home");
 			      });
 
 interactive("cefm-open-profile",
 			      "Open Facebook Profile page", function(I){
-			        cefm_click_button("._4fn6>._1ayn", "Profile", I);
+			        cefm.click_button(I, "._4fn6>._1ayn", "Profile");
 			      });
 
 interactive("cefm-quick-logout",
 			      "Quickly logout from Facebook", function(I){
-			        cefm_click_button("#logout_form>label>input", "Logout", I);
+			        cefm.click_button(I, "#logout_form>label>input", "Logout");
 			      });
 
 interactive("cefm-open-current-story-new-buffer",
@@ -468,7 +472,7 @@ interactive("cefm-expand-content",
 
 interactive("cefm-follow-notifications", "Follow notification links", function(I){
   if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
-	  cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
+	  cefm.click_button(I, "#fbNotificationsJewel>a.jewelButton", "Notification");
   var element = yield read_browser_object(I);
   try {
     element = load_spec(element);
@@ -480,7 +484,7 @@ interactive("cefm-follow-notifications", "Follow notification links", function(I
 
 interactive("cefm-follow-notifications-new-buffer", "Follow notification links in new buffer", function(I){
   if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
-	  cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
+	  cefm.click_button(I, "#fbNotificationsJewel>a.jewelButton", "Notification");
   var element = yield read_browser_object(I);
   try {
     element = load_spec(element);
@@ -493,7 +497,7 @@ interactive("cefm-follow-notifications-new-buffer", "Follow notification links i
 interactive("cefm-follow-notifications-new-buffer-background",
 			      "Follow notification links in new buffer background", function(I){
 			        if(!cefm_is_jewel_panel_open("fbNotificationsFlyout", I))
-				        cefm_click_button("#fbNotificationsJewel>a.jewelButton", "Notification", I);
+				        cefm.click_button(I, "#fbNotificationsJewel>a.jewelButton", "Notification");
 			        var element = yield read_browser_object(I);
 			        try {
 				        element = load_spec(element);
@@ -505,7 +509,7 @@ interactive("cefm-follow-notifications-new-buffer-background",
 
 interactive("cefm-follow-messages", "Follow messages conversation", function(I){
   if(!cefm_is_jewel_panel_open("fbMessagesFlyout", I))
-	  cefm_click_button("#fbMessagesJewel>a.jewelButton", "Messages", I);
+	  cefm.click_button(I, "#fbMessagesJewel>a.jewelButton", "Messages");
   var element = yield read_browser_object(I);
   try {
     element = load_spec(element);
