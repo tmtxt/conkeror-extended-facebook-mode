@@ -113,12 +113,18 @@ cefm.clickButton = function (I, selector, buttonName){
  */
 cefm.isFocusOnConversation = function (I){
   var document = I.buffer.document;
-  var activeConversation = document.querySelector(cefm.selectors.focusedConversation);
-  if(activeConversation !== null){
+  var focusedConversation = document.querySelector(cefm.selectors.focusedConversation);
+  if(focusedConversation !== null){
 	  return true;
   } else {
 	  return false;
   }
+};
+
+cefm.findFocusedConversation = function(I) {
+  var document = I.buffer.document;
+  var focusedConversation = document.querySelector(cefm.selectors.focusedConversation);
+  return focusedConversation;
 };
 
 /**
@@ -171,49 +177,51 @@ function cefm_find_conversation_textarea_array(document){
 
 /**
  * Cycle through conversations
+ * if there is no active conversation, tell the user to open, otherwise, find the
+ * right one to focus
+ * if not focus on any conversation, focus on the first one
+ * otherwise, focus on the next one, if this is the last one, focus back on
+ * the first one
  * @param I - The I object of the interactive command
  */
-function cefm_cycle_through_conversations(I){
-  // get the document object
+cefm.cycleConversations = function(I) {
   var document = I.buffer.document;
 
-  // query the div(s) that contain the chat conversations and the textareas for
-  // typing chat message
-  var conversationDiv;
-  var conversationTextareas = cefm_find_conversation_textarea_array(document);
+  // get all the opened conversation divs
+  var conversationDivs = document.querySelectorAll('.fbNub._50mz._50-v.opened');
 
-  // check if there are any active conversations
-  if((conversationDiv = cefm_find_conversation_div_array(document)) != null){
-	  // check if the focus is on any conversation or not
-	  if(cefm.isFocusOnConversation(I)){
-	    // find the conversation div that is nth-level parent of the active
-	    // element
-	    var p;
-	    if((p = cefm_find_conversation_div(document)) == null){
-		    I.minibuffer.message(cefm_conversation_not_found_message);
-	    } else {
-		    // loop through the conversationDiv to find the match div tag
-		    for(var i=0; i<conversationDiv.length; i++){
-		      if(p.isEqualNode(conversationDiv[i])){
-			      // focus on the next, if it's the end of array, focus on the first
-			      if(i == conversationDiv.length - 1){
-			        // end of array, focus on the first
-			        conversationTextareas[0].focus();
-			      } else {
-			        // focus on the next
-			        conversationTextareas[i+1].focus();
-			      }
-		      }
-		    }
-	    }
-	  } else {
-	    // focus on the first
-  	  conversationTextareas[0].focus();
-	  }
+  // if no active conversation
+  if(conversationDivs.length === 0) {
+    I.minibuffer.message('No conversation opened. Press q to start chatting');
   } else {
-	  I.minibuffer.message(cefm_no_active_conversation_message);
+    // if not focus on any conversation
+    if(!cefm.isFocusOnConversation(I)) {
+      // focus the first one
+      focusTextarea(conversationDivs[0]);
+    } else {
+      // if the focus is one the last one
+      var focusedConversation = cefm.findFocusedConversation(I);
+      if(focusedConversation === conversationDivs[conversationDivs.length - 1]) {
+        // focus on the first one
+        focusTextarea(conversationDivs[0]);
+      } else {
+        // focus one the next one
+        // find the current index of the focused one
+        var currentIndex;
+        for(var i = 0; i < conversationDivs.length; i++) {
+          if(focusedConversation === conversationDivs[i])
+            currentIndex = i;
+        }
+        focusTextarea(conversationDivs[currentIndex + 1]);
+      }
+    }
   }
-}
+
+  function focusTextarea(conversationDiv) {
+    var textarea = conversationDiv.querySelector('._552m');
+    textarea.focus();
+  }
+};
 
 /**
  * Attach Image to the current conversation
@@ -482,7 +490,7 @@ interactive("cefm-attach-image",
 
 interactive("cefm-cycle-conversations",
 			      "Cycle through chat conversations", function(I){
-			        cefm_cycle_through_conversations(I);
+			        cefm.cycleConversations(I);
 			      });
 
 interactive("cefm-expand-content",
