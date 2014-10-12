@@ -300,38 +300,37 @@ cefm.findSelectedStory = function (I){
  * @param I - The I object of the interactive command
  * @param open_url_func - The function for opening the url
  */
-cefm.openSelectedStoryLink = function (I, open_url_func){
+cefm.openSelectedStoryLink = function (I, openUrlFunction){
   // get the document
   var document = I.buffer.document;
-  var story_link_array = [];
-  var selected_story = cefm.findSelectedStory(I);
+  var storyLinks = [];
+  var selectedStory = cefm.findSelectedStory(I);
+  var regexes = cefm.regex.storyLink;
 
   // check if the selected story exists
 
-  if(selected_story != null){
+  if(selectedStory !== null){
+    // query all the possible potential story links
     cefm.selectors.storyLink.forEach(function(selector){
-      var links = selected_story.querySelectorAll(selector);
+      var links = selectedStory.querySelectorAll(selector);
       for(var i = 0; i < links.length; i++) {
-        story_link_array.push(links[0]);
+        storyLinks.push(links[0]);
       }
     });
-    
-  	// the regex array
-  	var regex_array = cefm.regex.storyLink;
 
-  	// loop the story_link_array
+  	// check if there is any story link matches the regex
   	var match = false;
-  	for(i=0; i<story_link_array.length; i++){
+  	for(var i = 0; i < storyLinks.length; i++){
   	  // check if the current link match the regex
   	  match = false;
-  	  for(j=0; j<regex_array.length; j++){
-  	  	if(regex_array[j].test(story_link_array[i])){
+  	  for(var j = 0; j < regexes.length; j++){
+  	  	if(regexes[j].test(storyLinks[i])){
   	  	  match = true;
   	  	  break;
   	  	}
   	  }
   	  if(match){
-  	  	open_url_func(story_link_array[i], I.window);
+  	  	openUrlFunction(storyLinks[i], I.window);
   	  	break;
   	  }
   	}
