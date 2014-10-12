@@ -40,13 +40,14 @@ var cefm_scroll_gap = 50;
  * @param button_name - The name of the button, can be any name that you like
  * @param I - The I object of the interactive command
  */
-cefm.click_button = function (I, selector, button_name){
+cefm.click_button = function (I, selector, buttonName){
   var document = I.buffer.document;
   var button = document.querySelector(selector);
   if (button !== null) {
 	  dom_node_click(button);
+    I.minibuffer.message("Button " + buttonName + " clicked");
   } else {
-	  I.minibuffer.message("Cannot find " + button_name + " button");
+	  I.minibuffer.message("Cannot find " + buttonName + " button");
   }
 };
 
@@ -54,14 +55,14 @@ cefm.click_button = function (I, selector, button_name){
  * Check if the focus is on any conversations or not
  * @param document - The document object of the current buffer (I.buffer.document)
  */
-function cefm_is_focus_on_conversation(document){
+cefm.is_focus_on_conversation = function (document){
   var activeElement = document.activeElement;
   if(activeElement.classList.contains("_552m")){
 	  return true;
   } else {
 	  return false;
   }
-}
+};
 
 /**
  * Finding the conversation <div> that is nth-level parent of the active element
