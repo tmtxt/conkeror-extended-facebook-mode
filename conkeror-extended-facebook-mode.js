@@ -24,6 +24,11 @@ define_key(facebook_keymap, "o", null, $fallthrough);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Variables used
+// Selectors
+cefm.selectors = {};
+// Selected story
+cefm.selectors.selectedStory = [".selectedStorySimple", "._5gxh", "._5qdv"];
+
 var cefm_conversation_not_found_message
   = "Cannot find conversation div";
 var cefm_no_active_conversation_message
@@ -249,17 +254,18 @@ function cefm_scroll_current_conversation_down(I){
 /**
  * Find the selected story
  * @param document - The document object of the current buffer (I.buffer.document)
- * @return Returns the selected story object if found, otherwise, returns null
+ * @return Returns the selected story div object if found, otherwise, returns null
  */
-function cefm_find_selected_story(document){
+cefm.findSelectedStory = function (document){
   var selectedStory = null;
+  var selectedStorySelectors = cefm.selectors.selectedStory;
+  selectedStorySelectors.forEach(function(selector){
+    var story = document.querySelector(selector);
+    if(story !== null) selectedStory = story;
+  });
   
-  if((selectedStory = document.querySelector(".selectedStorySimple")) != null
-	   || (selectedStory = document.querySelector("._5gxh")) != null
-	   || (selectedStory = document.querySelector("._5qdv")) != null){
-  }
   return selectedStory;
-}
+};
 
 /**
  * Inspect and find the link of selected story
@@ -270,7 +276,7 @@ function cefm_find_story_link(I, open_url_func){
   // get the document
   var document = I.buffer.document;
   var story_link_array = new Array();
-  var selected_story = cefm_find_selected_story(document);
+  var selected_story = cefm.findSelectedStory(document);
 
   // check if the selected story exists
 
@@ -361,7 +367,7 @@ function cefm_expand_story(I){
   var expandElement = null;
 
   // check if the selected story exists
-  if((selectedStory = cefm_find_selected_story(document)) != null){
+  if((selectedStory = cefm.findSelectedStory(document)) != null){
 	  expandParent = selectedStory;
   } else {
 	  expandParent = document;
