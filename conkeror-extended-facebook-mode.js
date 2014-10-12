@@ -60,6 +60,7 @@ cefm.regex.storyLink = [
 cefm.messages = {};
 cefm.messages.storyLinkNotFound = "Cannot find story link";
 cefm.messages.noSelectedStory = "No selected story. Press j k to traverse story";
+cefm.messages.expandElementNotFound = "Cannot find any expand element";
 
 var cefm_conversation_not_found_message
   = "Cannot find conversation div";
@@ -353,26 +354,26 @@ cefm.openSelectedStoryLink = function (I, openUrlFunction){
  * first one found 
  * @param I - The I object of the interactive command
  */
-function cefm_expand_story(I){
+cefm.expandStory = function (I){
   var selectedStory = null;
   var document = I.buffer.document;
   var expandParent = null;
   var expandElement = null;
 
   // check if the selected story exists
-  if((selectedStory = cefm.findSelectedStory(I)) != null){
+  if((selectedStory = cefm.findSelectedStory(I)) !== null){
 	  expandParent = selectedStory;
   } else {
 	  expandParent = document;
   }
 
   // find the expand element to click on
-  if((expandElement = expandParent.querySelector(".text_exposed_link>a")) != null){
+  if((expandElement = expandParent.querySelector(".text_exposed_link>a")) !== null){
 	  dom_node_click(expandElement);
   } else {
-	  I.minibuffer.message("Cannot find any expand element");
+	  I.minibuffer.message(cefm.messages.expandElementNotFound);
   }
-}
+};
 
 // check if the fbJewel panel (Friend Requests, Messages, Notifications,...) is
 // currently closed or opened
@@ -467,7 +468,7 @@ interactive("cefm-cycle-conversations",
 
 interactive("cefm-expand-content",
 			      "Expand the content of the selected story or the caption of the current photo", function(I){
-			        cefm_expand_story(I);
+			        cefm.expandStory(I);
 			      });
 
 interactive("cefm-follow-notifications", "Follow notification links", function(I){
