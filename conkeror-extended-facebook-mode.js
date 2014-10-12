@@ -56,6 +56,11 @@ cefm.regex.storyLink = [
 	new RegExp("^[A-Za-z0-9:/.]+(facebook.com/groups/)[A-Za-z0-9.]+(/permalink/)[A-Za-z0-9?=.&/_]+$"),
 ];
 
+// Messages
+cefm.messages = {};
+cefm.messages.storyLinkNotFound = "Cannot find story link";
+cefm.messages.noSelectedStory = "No selected story. Press j k to traverse story";
+
 var cefm_conversation_not_found_message
   = "Cannot find conversation div";
 var cefm_no_active_conversation_message
@@ -334,12 +339,12 @@ cefm.openSelectedStoryLink = function (I, openUrlFunction){
   	  	break;
   	  }
   	}
+    
   	if(!match){
-  	  I.minibuffer.message("Cannot find story link");
+  	  I.minibuffer.message(cefm.messages.storyLinkNotFound);
   	}
-	  
   } else {
-  	I.minibuffer.message("No selected story");
+  	I.minibuffer.message(cefm.messages.noSelectedStory);
   }
 };
 
