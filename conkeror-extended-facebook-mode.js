@@ -29,6 +29,28 @@ cefm.selectors = {};
 // Selected story
 cefm.selectors.selectedStory = [".selectedStorySimple", "._5gxh", "._5qdv"];
 
+// Regex
+cefm.regex = {};
+// Story link format
+cefm.regex.storyLink = [
+  // https://www.facebook.com/photo.php?fbid=681522898533972&set=a.451364638216467.109262.100000288032725&type=1
+  new RegExp("^[A-Za-z0-9:/.]+(facebook.com/photo.php)[A-Za-z0-9?=.&/_]+$"),
+  // https://www.facebook.com/candycandy198/posts/273678246115411?stream_ref=1
+  new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/posts/)[A-Za-z0-9:./?_=]+$"),
+  // https://www.facebook.com/groups/377906112324180/permalink/482710721843718/
+  new RegExp("^[A-Za-z0-9:/.]+(facebook.com/groups/)[A-Za-z0-9.]+(/permalink/)[A-Za-z0-9./]+$"),
+  // https://www.facebook.com/media/set/?set=a.714473798592597.1073741843.100000899501161&type=1
+  new RegExp("^[A-Za-z0-9:/.]+(facebook.com/media/set)/[A-Za-z0-9?.=/&]+$"),
+  // https://www.facebook.com/permalink.php?story_fbid=afjslkjks
+  new RegExp("^[A-Za-z0-9:/.]+(facebook.com/permalink.php)[A-Za-z0-9_?=/&]+$"),
+	// https://www.facebook.com/emilyosment10392/activity/3489815221361
+	new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/activity/)[A-Za-z0-9:./]+$"),
+	// https://www.facebook.com/TapChiChimLon/photos/a.173301119366880.49325/729867413710245/?type=1
+	new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/photos)[A-Za-z0-9?=.&/_]+$"),
+	// https://www.facebook.com/groups/243388739045691/permalink/735257363192157/?stream_ref=1
+	new RegExp("^[A-Za-z0-9:/.]+(facebook.com/groups/)[A-Za-z0-9.]+(/permalink/)[A-Za-z0-9?=.&/_]+$"),
+];
+
 var cefm_conversation_not_found_message
   = "Cannot find conversation div";
 var cefm_no_active_conversation_message
@@ -304,32 +326,7 @@ function cefm_find_story_link(I, open_url_func){
   	}
 
   	// the regex array
-  	var regex_array = new Array();
-  	var regex;
-  	// https://www.facebook.com/photo.php?fbid=681522898533972&set=a.451364638216467.109262.100000288032725&type=1
-  	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/photo.php)[A-Za-z0-9?=.&/_]+$");
-  	regex_array.push(regex);
-  	// https://www.facebook.com/candycandy198/posts/273678246115411?stream_ref=1
-  	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/posts/)[A-Za-z0-9:./?_=]+$");
-  	regex_array.push(regex);
-  	// https://www.facebook.com/groups/377906112324180/permalink/482710721843718/
-  	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/groups/)[A-Za-z0-9.]+(/permalink/)[A-Za-z0-9./]+$");
-  	regex_array.push(regex);
-  	// https://www.facebook.com/media/set/?set=a.714473798592597.1073741843.100000899501161&type=1
-  	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/media/set)/[A-Za-z0-9?.=/&]+$");
-  	regex_array.push(regex);
-  	// https://www.facebook.com/permalink.php?story_fbid=afjslkjks
-  	regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/permalink.php)[A-Za-z0-9_?=/&]+$");
-  	regex_array.push(regex);
-	  // https://www.facebook.com/emilyosment10392/activity/3489815221361
-	  regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/activity/)[A-Za-z0-9:./]+$");
-	  regex_array.push(regex);
-	  // https://www.facebook.com/TapChiChimLon/photos/a.173301119366880.49325/729867413710245/?type=1
-	  regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/photos)[A-Za-z0-9?=.&/_]+$");
-	  regex_array.push(regex);
-	  // https://www.facebook.com/groups/243388739045691/permalink/735257363192157/?stream_ref=1
-	  regex = new RegExp("^[A-Za-z0-9:/.]+(facebook.com/groups/)[A-Za-z0-9.]+(/permalink/)[A-Za-z0-9?=.&/_]+$");
-	  regex_array.push(regex);
+  	var regex_array = cefm.regex.storyLink;
 
   	// loop the story_link_array
   	var match = false;
