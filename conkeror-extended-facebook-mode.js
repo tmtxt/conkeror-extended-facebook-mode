@@ -520,30 +520,84 @@ interactive("test", "", function(I){
 
 cefm.showChatThumb = function(I, focusedConversation){
   var doc = I.buffer.document;
+  var element;
+  var chatBody = focusedConversation.querySelector(cefm.selectors.conversationBody);
 
   // find the image link
-  var imageLink = focusedConversation.querySelector('._ksh');
-  if(!!imageLink) {
-    imageLink = imageLink.getAttribute('href');
+  var messages = focusedConversation.querySelectorAll('._5wd4');
 
-    // create the div to show the image
-    var div = doc.createElement('div');
-    div.setAttribute('style', 'position: absolute; top: 100px; left: 100px; border: 1px; z-index: 100000');
-
-    // img tag
-    var img = doc.createElement('img');
-    img.setAttribute('src', imageLink);
-    div.appendChild(img);
-
-    if(!!I.buffer.tempDiv) {
-      I.buffer.tempDiv.parentNode.removeChild(I.buffer.tempDiv);
-      I.buffer.tempDiv = null;
-    }
-
-    doc.querySelector('body').appendChild(div);
-
-    I.buffer.tempDiv = div;
+  for(var i = 0; i < messages.length; i++) {
+    handle(messages[i]);
   }
+
+  function handle(message){
+    // find the image
+    var link = message.querySelector('._ksh[role=img]');
+    
+
+    
+    if(link!= null) {
+      var linkString = link.getAttribute('href');
+      if(linkString.indexOf('fbcdn-sphotos-h-a.akamaihd.net') >=0) {
+
+        var posTop = chatBody.scrollTop - message.offsetTop;
+
+        if(posTop < 150 && posTop > -150) {
+          dump('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n');
+          dump(posTop);
+          dump('\n');
+          dump(message.offsetTop);
+          dump('\n');
+          dump(link);
+          dump('\n');
+          dump('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n');
+
+          // create the div to show the image
+          var div = doc.createElement('div');
+          div.setAttribute('style', 'position: absolute; top: 100px; left: 100px; border: 1px; z-index: 100000');
+
+          // img tag
+          var img = doc.createElement('img');
+          img.setAttribute('src', linkString);
+          div.appendChild(img);
+
+          if(!!I.buffer.tempDiv) {
+            I.buffer.tempDiv.parentNode.removeChild(I.buffer.tempDiv);
+            I.buffer.tempDiv = null;
+          }
+
+          doc.querySelector('body').appendChild(div);
+
+          I.buffer.tempDiv = div;
+        }
+        
+      }
+    }
+    
+  }
+  
+  // var imageLink = focusedConversation.querySelector('._ksh');
+  // if(!!imageLink) {
+  //   imageLink = imageLink.getAttribute('href');
+
+  //   // create the div to show the image
+  //   var div = doc.createElement('div');
+  //   div.setAttribute('style', 'position: absolute; top: 100px; left: 100px; border: 1px; z-index: 100000');
+
+  //   // img tag
+  //   var img = doc.createElement('img');
+  //   img.setAttribute('src', imageLink);
+  //   div.appendChild(img);
+
+  //   if(!!I.buffer.tempDiv) {
+  //     I.buffer.tempDiv.parentNode.removeChild(I.buffer.tempDiv);
+  //     I.buffer.tempDiv = null;
+  //   }
+
+  //   doc.querySelector('body').appendChild(div);
+
+  //   I.buffer.tempDiv = div;
+  // }
 };
 
 provide("conkeror-extended-facebook-mode");
