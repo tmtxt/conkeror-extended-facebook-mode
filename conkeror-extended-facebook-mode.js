@@ -230,7 +230,7 @@ cefm.scrollCurrentConversation = function(I, scrollGap) {
     chatBody.scrollTop = chatBody.scrollTop + scrollGap;
 
     // thumbnail
-    cefm.showChatThumb(I, focusedConversation);
+    cefm.showImageThumbInConversation(I, focusedConversation);
   }
 };
 
@@ -369,6 +369,149 @@ cefm.isJewelPanelOpen = function (I, panelSelector){
   }
 };
 
+cefm.displayImageFromMessage = function(I, message, focusedConversation) {
+  var doc = I.buffer.document;
+  var chatBody = focusedConversation.querySelector(cefm.selectors.conversationBody);
+  
+  // find the link that contains the image
+  var link = message.querySelector('._ksh[role=img]');
+
+  if(link !== null) {
+    // src of the image
+    var linkString = link.getAttribute('href');
+    // make sure that it is the uploaded image
+    if(linkString.indexOf('fbcdn-sphotos-h-a.akamaihd.net') >= 0) {
+      // determine if this image is visible within the view port
+      var posTop = chatBody.scrollTop - message.offsetTop;
+      if(posTop < 150 && posTop > -150) {
+        // create the div to show the image
+        var div = doc.createElement('div');
+        div.setAttribute('style', 'position: absolute; top: 100px; left: 100px; border: 1px; z-index: 100000');
+        // img tag
+        var img = doc.createElement('img');
+        img.setAttribute('src', linkString);
+        div.appendChild(img);
+
+        // if there is another div exists, remove that
+        if(!!I.buffer.tempImgDiv) {
+          I.buffer.tempImgDiv.parentNode.removeChild(I.buffer.tempImgDiv);
+          I.buffer.tempImgDiv = null;
+        }
+
+        // append the div to the page
+        doc.querySelector('body').appendChild(div);
+        I.buffer.tempImgDiv = div;
+
+        // timer
+        var event = {
+	        notify: function(timer) {
+            if(!!I.buffer.tempImgDiv) {
+              I.buffer.tempImgDiv.parentNode.removeChild(I.buffer.tempImgDiv);
+              I.buffer.tempImgDiv = null;
+            }
+	        }
+        };
+
+        if(!!I.buffer.lastTimer){
+	        I.buffer.lastTimer.cancel();
+        }
+        
+        // Now it is time to create the timer...  
+        I.buffer.lastTimer = Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);
+        
+        // ... and to initialize it, we want to call event.notify() ...
+        // ... one time after exactly ten seconds. 
+        I.buffer.lastTimer.initWithCallback(event, 3000, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+  return false;
+};
+
+cefm.showImageThumbInConversation = function(I, focusedConversation){
+  // 
+  var doc = I.buffer.document;
+  var chatBody = focusedConversation.querySelector(cefm.selectors.conversationBody);
+
+  // find all the chat messages
+  var messages = focusedConversation.querySelectorAll('._5wd4');
+
+  for(var i = 0; i < messages.length; i++) {
+    if(cefm.displayImageFromMessage(I, messages[i], focusedConversation)) {
+      break;
+    }
+  }
+
+  function handle(message){
+    // find the image
+    var link = message.querySelector('._ksh[role=img]');
+    
+    if(link!= null) {
+      var linkString = link.getAttribute('href');
+      if(linkString.indexOf('fbcdn-sphotos-h-a.akamaihd.net') >= 0) {
+
+        var posTop = chatBody.scrollTop - message.offsetTop;
+
+        if(posTop < 150 && posTop > -150) {
+          dump('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n');
+          dump(posTop);
+          dump('\n');
+          dump(message.offsetTop);
+          dump('\n');
+          dump(link);
+          dump('\n');
+          dump('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n');
+
+          // create the div to show the image
+          var div = doc.createElement('div');
+          div.setAttribute('style', 'position: absolute; top: 100px; left: 100px; border: 1px; z-index: 100000');
+
+          // img tag
+          var img = doc.createElement('img');
+          img.setAttribute('src', linkString);
+          div.appendChild(img);
+
+          if(!!I.buffer.tempDiv) {
+            I.buffer.tempDiv.parentNode.removeChild(I.buffer.tempDiv);
+            I.buffer.tempDiv = null;
+          }
+
+          doc.querySelector('body').appendChild(div);
+
+          I.buffer.tempDiv = div;
+
+          // timer
+          var event = {
+	          notify: function(timer) {
+              if(!!I.buffer.tempDiv) {
+                I.buffer.tempDiv.parentNode.removeChild(I.buffer.tempDiv);
+                I.buffer.tempDiv = null;
+              }
+	          }
+          };
+
+          if(!!cefm.lastTimer){
+	          cefm.lastTimer.cancel();
+          }
+          
+          // Now it is time to create the timer...  
+          cefm.lastTimer = Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);
+          
+          // ... and to initialize it, we want to call event.notify() ...
+          // ... one time after exactly ten seconds. 
+          cefm.lastTimer.initWithCallback(event, 3000, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+        }
+        
+      }
+    }
+    
+  }
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 // browser object classes link for notification, friend requests and messages
 define_browser_object_class("facebook-notification-links", null,
@@ -501,98 +644,10 @@ interactive("cefm-follow-multiple-notifications", "",
 			        if(isNaN(a)){
 			          I.minibuffer.message("Please input a number!");
 			        } else {
-			          a = parseInt(a);
+			          a = parseInt();
 			          
 			        }
 		        });
-
-interactive("test", "", function(I){
-  var doc = I.buffer.document;
-
-  
-
-  var div = doc.createElement('div');
-
-  div.setAttribute('style', 'width: 90px; height: 90px; top: 100px; left: 100px; background-color: blue; position: absolute');
-  //doc.querySelector('body').appendChild(div);
-  doc.body.appendChild(div);
-});
-
-cefm.showChatThumb = function(I, focusedConversation){
-  var doc = I.buffer.document;
-  var element;
-  var chatBody = focusedConversation.querySelector(cefm.selectors.conversationBody);
-
-  // find the image link
-  var messages = focusedConversation.querySelectorAll('._5wd4');
-
-  for(var i = 0; i < messages.length; i++) {
-    handle(messages[i]);
-  }
-
-  function handle(message){
-    // find the image
-    var link = message.querySelector('._ksh[role=img]');
-    
-    if(link!= null) {
-      var linkString = link.getAttribute('href');
-      if(linkString.indexOf('fbcdn-sphotos-h-a.akamaihd.net') >=0) {
-
-        var posTop = chatBody.scrollTop - message.offsetTop;
-
-        if(posTop < 150 && posTop > -150) {
-          dump('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n');
-          dump(posTop);
-          dump('\n');
-          dump(message.offsetTop);
-          dump('\n');
-          dump(link);
-          dump('\n');
-          dump('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n');
-
-          // create the div to show the image
-          var div = doc.createElement('div');
-          div.setAttribute('style', 'position: absolute; top: 100px; left: 100px; border: 1px; z-index: 100000');
-
-          // img tag
-          var img = doc.createElement('img');
-          img.setAttribute('src', linkString);
-          div.appendChild(img);
-
-          if(!!I.buffer.tempDiv) {
-            I.buffer.tempDiv.parentNode.removeChild(I.buffer.tempDiv);
-            I.buffer.tempDiv = null;
-          }
-
-          doc.querySelector('body').appendChild(div);
-
-          I.buffer.tempDiv = div;
-
-          // timer
-          var event = {
-	          notify: function(timer) {
-              I.buffer.tempDiv.parentNode.removeChild(I.buffer.tempDiv);
-              I.buffer.tempDiv = null;
-	          }
-          };
-
-          if(!!cefm.lastTimer){
-	          cefm.lastTimer.cancel();
-          }
-          
-          // Now it is time to create the timer...  
-          cefm.lastTimer = Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);
-          
-          // ... and to initialize it, we want to call event.notify() ...
-          // ... one time after exactly ten seconds. 
-          cefm.lastTimer.initWithCallback(event, 3000, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
-        }
-        
-      }
-    }
-    
-  }
-};
 
 provide("conkeror-extended-facebook-mode");
 
