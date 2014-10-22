@@ -534,8 +534,6 @@ cefm.showChatThumb = function(I, focusedConversation){
     // find the image
     var link = message.querySelector('._ksh[role=img]');
     
-
-    
     if(link!= null) {
       var linkString = link.getAttribute('href');
       if(linkString.indexOf('fbcdn-sphotos-h-a.akamaihd.net') >=0) {
@@ -569,35 +567,31 @@ cefm.showChatThumb = function(I, focusedConversation){
           doc.querySelector('body').appendChild(div);
 
           I.buffer.tempDiv = div;
+
+          // timer
+          var event = {
+	          notify: function(timer) {
+              I.buffer.tempDiv.parentNode.removeChild(I.buffer.tempDiv);
+              I.buffer.tempDiv = null;
+	          }
+          };
+
+          if(!!cefm.lastTimer){
+	          cefm.lastTimer.cancel();
+          }
+          
+          // Now it is time to create the timer...  
+          cefm.lastTimer = Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);
+          
+          // ... and to initialize it, we want to call event.notify() ...
+          // ... one time after exactly ten seconds. 
+          cefm.lastTimer.initWithCallback(event, 3000, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
         }
         
       }
     }
     
   }
-  
-  // var imageLink = focusedConversation.querySelector('._ksh');
-  // if(!!imageLink) {
-  //   imageLink = imageLink.getAttribute('href');
-
-  //   // create the div to show the image
-  //   var div = doc.createElement('div');
-  //   div.setAttribute('style', 'position: absolute; top: 100px; left: 100px; border: 1px; z-index: 100000');
-
-  //   // img tag
-  //   var img = doc.createElement('img');
-  //   img.setAttribute('src', imageLink);
-  //   div.appendChild(img);
-
-  //   if(!!I.buffer.tempDiv) {
-  //     I.buffer.tempDiv.parentNode.removeChild(I.buffer.tempDiv);
-  //     I.buffer.tempDiv = null;
-  //   }
-
-  //   doc.querySelector('body').appendChild(div);
-
-  //   I.buffer.tempDiv = div;
-  // }
 };
 
 provide("conkeror-extended-facebook-mode");
