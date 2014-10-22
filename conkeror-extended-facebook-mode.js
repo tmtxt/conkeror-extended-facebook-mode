@@ -535,7 +535,14 @@ cefm.showChatThumb = function(I, focusedConversation){
     img.setAttribute('src', imageLink);
     div.appendChild(img);
 
+    if(!!I.buffer.tempDiv) {
+      I.buffer.tempDiv.parentNode.removeChild(I.buffer.tempDiv);
+      I.buffer.tempDiv = null;
+    }
+
     doc.querySelector('body').appendChild(div);
+
+    I.buffer.tempDiv = div;
   }
 };
 
