@@ -521,19 +521,22 @@ interactive("test", "", function(I){
 cefm.showChatThumb = function(I, focusedConversation){
   var doc = I.buffer.document;
 
+  // find the image link
   var imageLink = focusedConversation.querySelector('._ksh');
-  imageLink = imageLink.getAttribute('href');
+  if(!!imageLink) {
+    imageLink = imageLink.getAttribute('href');
 
-  I.minibuffer.message(imageLink);
+    // create the div to show the image
+    var div = doc.createElement('div');
+    div.setAttribute('style', 'position: absolute; top: 100px; left: 100px; border: 1px; z-index: 100000');
 
-  var div = doc.createElement('div');
-  div.setAttribute('style', 'position: absolute; width: 90px; height: 90px; top: 100px; left: 100px; background-color: blue; z-index: 100000');
+    // img tag
+    var img = doc.createElement('img');
+    img.setAttribute('src', imageLink);
+    div.appendChild(img);
 
-  var img = doc.createElement('img');
-  img.setAttribute('src', imageLink);
-  div.appendChild(img);
-
-  doc.querySelector('body').appendChild(div);
+    doc.querySelector('body').appendChild(div);
+  }
 };
 
 provide("conkeror-extended-facebook-mode");
