@@ -228,6 +228,9 @@ cefm.scrollCurrentConversation = function(I, scrollGap) {
     // get the div that displays the chat content and scroll
     var chatBody = focusedConversation.querySelector(cefm.selectors.conversationBody);
     chatBody.scrollTop = chatBody.scrollTop + scrollGap;
+
+    // thumbnail
+    cefm.showChatThumb(I, focusedConversation);
   }
 };
 
@@ -503,4 +506,35 @@ interactive("cefm-follow-multiple-notifications", "",
 			        }
 		        });
 
+interactive("test", "", function(I){
+  var doc = I.buffer.document;
+
+  
+
+  var div = doc.createElement('div');
+
+  div.setAttribute('style', 'width: 90px; height: 90px; top: 100px; left: 100px; background-color: blue; position: absolute');
+  //doc.querySelector('body').appendChild(div);
+  doc.body.appendChild(div);
+});
+
+cefm.showChatThumb = function(I, focusedConversation){
+  var doc = I.buffer.document;
+
+  var imageLink = focusedConversation.querySelector('._ksh');
+  imageLink = imageLink.getAttribute('href');
+
+  I.minibuffer.message(imageLink);
+
+  var div = doc.createElement('div');
+  div.setAttribute('style', 'position: absolute; width: 90px; height: 90px; top: 100px; left: 100px; background-color: blue; z-index: 100000');
+
+  var img = doc.createElement('img');
+  img.setAttribute('src', imageLink);
+  div.appendChild(img);
+
+  doc.querySelector('body').appendChild(div);
+};
+
 provide("conkeror-extended-facebook-mode");
+
