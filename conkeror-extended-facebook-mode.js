@@ -68,6 +68,8 @@ cefm.regex.storyLink = [
 	new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/photos)[A-Za-z0-9?=.&/_]+$"),
 	// https://www.facebook.com/groups/243388739045691/permalink/735257363192157/?stream_ref=1
 	new RegExp("^[A-Za-z0-9:/.]+(facebook.com/groups/)[A-Za-z0-9.]+(/permalink/)[A-Za-z0-9?=.&/_]+$"),
+  // https://www.facebook.com/video.php?v=711672295568033
+  new RegExp("^[A-Za-z0-9:/.]+(facebook.com/video.php)[A-Za-z0-9?=.&/_]+$"),
 ];
 
 // Messages
@@ -230,7 +232,7 @@ cefm.scrollCurrentConversation = function(I, scrollGap) {
     chatBody.scrollTop = chatBody.scrollTop + scrollGap;
 
     // thumbnail
-    cefm.showImageThumbInConversation(I, focusedConversation);
+    // cefm.showImageThumbInConversation(I, focusedConversation);
   }
 };
 
