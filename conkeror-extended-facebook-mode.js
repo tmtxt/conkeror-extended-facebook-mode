@@ -45,7 +45,7 @@ cefm.selectors.focusedConversation = '.fbNub._50mz._50-v.focusedTab';
 // Chat conversation
 cefm.selectors.openedConversation = '.fbNub._50mz._50-v.opened';
 cefm.selectors.conversationTextarea = '._552m';
-cefm.selectors.selectImageButton = "._5f0v";
+cefm.selectors.selectImageButton = "input._5f0v";
 cefm.selectors.conversationBody = '.fbNubFlyoutBody.scrollable';
 
 // Regex
@@ -268,7 +268,7 @@ cefm.findSelectedStory = function (I){
     var story = document.querySelector(selector);
     if(story !== null) selectedStory = story;
   });
-  
+
   return selectedStory;
 };
 
@@ -312,7 +312,7 @@ cefm.openSelectedStoryLink = function (I, openUrlFunction){
   	  	break;
   	  }
   	}
-    
+
   	if(!match){
   	  I.minibuffer.message(cefm.messages.storyLinkNotFound);
   	}
@@ -353,7 +353,7 @@ cefm.expandStory = function (I){
  * currently closed or opened
  * panelSelector: the selector of the panel div tag
  * (usually "#fbMessagesFlyout", "#fbNotificationsFlyout", "#fbRequestsFlyout")
- * 
+ *
  * @param I - The I object of the interactive command
  */
 cefm.isJewelPanelOpen = function (I, panelSelector){
@@ -374,7 +374,7 @@ cefm.isJewelPanelOpen = function (I, panelSelector){
 cefm.displayImageFromMessage = function(I, message, focusedConversation) {
   var doc = I.buffer.document;
   var chatBody = focusedConversation.querySelector(cefm.selectors.conversationBody);
-  
+
   // find the link that contains the image
   var link = message.querySelector('._ksh[role=img]');
 
@@ -417,12 +417,12 @@ cefm.displayImageFromMessage = function(I, message, focusedConversation) {
         if(!!I.buffer.lastTimer){
 	        I.buffer.lastTimer.cancel();
         }
-        
-        // Now it is time to create the timer...  
+
+        // Now it is time to create the timer...
         I.buffer.lastTimer = Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);
-        
+
         // ... and to initialize it, we want to call event.notify() ...
-        // ... one time after exactly ten seconds. 
+        // ... one time after exactly ten seconds.
         I.buffer.lastTimer.initWithCallback(event, 3000, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
 
         return true;
@@ -435,7 +435,7 @@ cefm.displayImageFromMessage = function(I, message, focusedConversation) {
 };
 
 cefm.showImageThumbInConversation = function(I, focusedConversation){
-  // 
+  //
   var doc = I.buffer.document;
   var chatBody = focusedConversation.querySelector(cefm.selectors.conversationBody);
 
@@ -451,7 +451,7 @@ cefm.showImageThumbInConversation = function(I, focusedConversation){
   function handle(message){
     // find the image
     var link = message.querySelector('._ksh[role=img]');
-    
+
     if(link!= null) {
       var linkString = link.getAttribute('href');
       if(linkString.indexOf('fbcdn-sphotos-h-a.akamaihd.net') >= 0) {
@@ -499,18 +499,18 @@ cefm.showImageThumbInConversation = function(I, focusedConversation){
           if(!!cefm.lastTimer){
 	          cefm.lastTimer.cancel();
           }
-          
-          // Now it is time to create the timer...  
+
+          // Now it is time to create the timer...
           cefm.lastTimer = Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);
-          
+
           // ... and to initialize it, we want to call event.notify() ...
-          // ... one time after exactly ten seconds. 
+          // ... one time after exactly ten seconds.
           cefm.lastTimer.initWithCallback(event, 3000, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
         }
-        
+
       }
     }
-    
+
   }
 };
 
@@ -647,9 +647,8 @@ interactive("cefm-follow-multiple-notifications", "",
 			          I.minibuffer.message("Please input a number!");
 			        } else {
 			          a = parseInt();
-			          
+
 			        }
 		        });
 
 provide("conkeror-extended-facebook-mode");
-
