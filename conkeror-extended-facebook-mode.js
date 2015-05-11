@@ -70,6 +70,8 @@ cefm.regex.storyLink = [
 	new RegExp("^[A-Za-z0-9:/.]+(facebook.com/groups/)[A-Za-z0-9.]+(/permalink/)[A-Za-z0-9?=.&/_]+$"),
   // https://www.facebook.com/video.php?v=711672295568033
   new RegExp("^[A-Za-z0-9:/.]+(facebook.com/video.php)[A-Za-z0-9?=.&/_]+$"),
+  // https://www.facebook.com/TapChiChimLon/videos/992882410742076/
+  new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9?=.&/_]+(/videos/)[0-9/]+$"),
 ];
 
 // Messages
