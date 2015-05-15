@@ -39,7 +39,8 @@ cefm.selectors.messagesButton = "._1z4y>.jewelButton";
 cefm.selectors.notificationButton = "._4xi2>.jewelButton";
 cefm.selectors.homeButton = "._2pdh>._1ayn";
 cefm.selectors.profileButton = "._4fn6>._1ayn";
-cefm.selectors.logoutButton = "#logout_form>label>input";
+cefm.selectors.logoutButton1 = "#userNavigationLabel";
+cefm.selectors.logoutButton2 = "li._54ni:nth-child(17) > a:nth-child(1)"
 // Messages
 cefm.selectors.focusedConversation = '.fbNub._50mz._50-v.focusedTab';
 // Chat conversation
@@ -555,7 +556,8 @@ interactive("cefm-open-profile",
 
 interactive("cefm-quick-logout",
 			      "Quickly logout from Facebook", function(I){
-			        cefm.clickButton(I, cefm.selectors.logoutButton, cefm.buttonNames.logout);
+			        cefm.clickButton(I, cefm.selectors.logoutButton1, cefm.buttonNames.logout);
+					cefm.clickButton(I, cefm.selectors.logoutButton2, cefm.buttonNames.logout);
 			      });
 
 interactive("cefm-open-current-story-new-buffer",
