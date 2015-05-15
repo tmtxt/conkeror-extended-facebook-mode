@@ -63,12 +63,12 @@ cefm.regex.storyLink = [
   new RegExp("^[A-Za-z0-9:/.]+(facebook.com/media/set)/[A-Za-z0-9?.=/&]+$"),
   // https://www.facebook.com/permalink.php?story_fbid=afjslkjks
   new RegExp("^[A-Za-z0-9:/.]+(facebook.com/permalink.php)[A-Za-z0-9_?=/&]+$"),
-	// https://www.facebook.com/emilyosment10392/activity/3489815221361
-	new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/activity/)[A-Za-z0-9:./]+$"),
-	// https://www.facebook.com/TapChiChimLon/photos/a.173301119366880.49325/729867413710245/?type=1
-	new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/photos)[A-Za-z0-9?=.&/_]+$"),
-	// https://www.facebook.com/groups/243388739045691/permalink/735257363192157/?stream_ref=1
-	new RegExp("^[A-Za-z0-9:/.]+(facebook.com/groups/)[A-Za-z0-9.]+(/permalink/)[A-Za-z0-9?=.&/_]+$"),
+  // https://www.facebook.com/emilyosment10392/activity/3489815221361
+  new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/activity/)[A-Za-z0-9:./]+$"),
+  // https://www.facebook.com/TapChiChimLon/photos/a.173301119366880.49325/729867413710245/?type=1
+  new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9.]+(/photos)[A-Za-z0-9?=.&/_]+$"),
+  // https://www.facebook.com/groups/243388739045691/permalink/735257363192157/?stream_ref=1
+  new RegExp("^[A-Za-z0-9:/.]+(facebook.com/groups/)[A-Za-z0-9.]+(/permalink/)[A-Za-z0-9?=.&/_]+$"),
   // https://www.facebook.com/video.php?v=711672295568033
   new RegExp("^[A-Za-z0-9:/.]+(facebook.com/video.php)[A-Za-z0-9?=.&/_]+$"),
   // https://www.facebook.com/TapChiChimLon/videos/992882410742076/
@@ -556,7 +556,7 @@ interactive("cefm-open-profile",
 
 interactive("cefm-quick-logout",
 			      "Quickly logout from Facebook", function(I){
-			        cefm.clickButton(I, cefm.selectors.logoutButton1, cefm.buttonNames.logout);
+					cefm.clickButton(I, cefm.selectors.logoutButton1, cefm.buttonNames.logout);
 					cefm.clickButton(I, cefm.selectors.logoutButton2, cefm.buttonNames.logout);
 			      });
 
