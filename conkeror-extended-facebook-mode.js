@@ -556,8 +556,8 @@ interactive("cefm-open-profile",
 
 interactive("cefm-quick-logout",
 			      "Quickly logout from Facebook", function(I){
-					cefm.clickButton(I, cefm.selectors.logoutButton1, cefm.buttonNames.logout);
-					cefm.clickButton(I, cefm.selectors.logoutButton2, cefm.buttonNames.logout);
+                    cefm.clickButton(I, cefm.selectors.logoutButton1, cefm.buttonNames.logout);
+                    cefm.clickButton(I, cefm.selectors.logoutButton2, cefm.buttonNames.logout);
 			      });
 
 interactive("cefm-open-current-story-new-buffer",
