@@ -40,7 +40,7 @@ cefm.selectors.notificationButton = "._4xi2>.jewelButton";
 cefm.selectors.homeButton = "._2pdh>._1ayn";
 cefm.selectors.profileButton = "._4fn6>._1ayn";
 cefm.selectors.logoutButton1 = "#userNavigationLabel";
-cefm.selectors.logoutButton2 = "li._54ni:nth-child(17) > a:nth-child(1)"
+cefm.selectors.logoutButton2 = "li._54ni:nth-child(17) > a:nth-child(1)";
 // Messages
 cefm.selectors.focusedConversation = '.fbNub._50mz._50-v.focusedTab';
 // Chat conversation
@@ -73,6 +73,8 @@ cefm.regex.storyLink = [
   new RegExp("^[A-Za-z0-9:/.]+(facebook.com/video.php)[A-Za-z0-9?=.&/_]+$"),
   // https://www.facebook.com/TapChiChimLon/videos/992882410742076/
   new RegExp("^[A-Za-z0-9:/.]+(facebook.com/)[A-Za-z0-9?=.&/_]+(/videos/)[0-9/]+$"),
+  // https://www.facebook.com/events/380575335463254/permalink/382625158591605/?ref=3
+  new RegExp("^[A-Za-z0-9:/.]+(facebook.com/events/)[A-Za-z0-9.]+(/permalink/)[A-Za-z0-9?=.&/_]+$"),
 ];
 
 // Messages
