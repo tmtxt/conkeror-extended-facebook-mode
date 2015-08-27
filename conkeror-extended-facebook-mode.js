@@ -46,7 +46,7 @@ cefm.selectors.focusedConversation = '.fbNub._50mz._50-v.focusedTab';
 // Chat conversation
 cefm.selectors.openedConversation = '.fbNub._50mz._50-v.opened';
 cefm.selectors.conversationTextarea = '._552m';
-cefm.selectors.selectImageButton = "input._5f0v";
+cefm.selectors.selectImageButton = "input._n";
 cefm.selectors.conversationBody = '.fbNubFlyoutBody.scrollable';
 
 // Regex
