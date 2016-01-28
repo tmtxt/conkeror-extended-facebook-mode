@@ -519,6 +519,14 @@ cefm.showImageThumbInConversation = function(I, focusedConversation){
   }
 };
 
+cefm.facebookShare = function(I) {
+  var d=I.buffer.document;
+  var f='http://www.facebook.com/sharer';
+  var l=d.location, e=encodeURIComponent;
+  var p='.php?src=bm&v=4&i=1279479932&u='+e(l.href)+'&t='+e(d.title);
+  browser_object_follow(I.buffer, OPEN_NEW_BUFFER, f+p);
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 // browser object classes link for notification, friend requests and messages
 define_browser_object_class("facebook-notification-links", null,
@@ -560,7 +568,7 @@ interactive("cefm-quick-logout",
 			      "Quickly logout from Facebook", function(I){
 			        cefm.clickButton(I, cefm.selectors.logoutButton1, cefm.buttonNames.logout);
               cefm.clickButton(I, cefm.selectors.logoutButton2, cefm.buttonNames.logout);
-			});
+			      });
 
 interactive("cefm-open-current-story-new-buffer",
 			      "Open selected story in new buffer", function (I) {
@@ -596,6 +604,11 @@ interactive("cefm-expand-content",
 			      "Expand the content of the selected story or the caption of the current photo", function(I){
 			        cefm.expandStory(I);
 			      });
+
+interactive("cefm-facebook-share",
+            "Share the current page to Facebook", function(I){
+              cefm.facebookShare(I);
+            });
 
 interactive("cefm-follow-notifications", "Follow notification links", function(I){
   if(!cefm.isJewelPanelOpen(I, "#fbNotificationsFlyout"))
